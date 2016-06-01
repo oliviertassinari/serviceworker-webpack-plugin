@@ -4,7 +4,11 @@
   "description": "Simplifies creation of a service worker to serve your webpack bundles",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "test": "npm run lint",
+    "prebuild": "rm -rf lib/",
+    "build": "babel src --out-dir lib",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -20,5 +24,13 @@
   "bugs": {
     "url": "https://github.com/oliviertassinari/serviceworker-webpack-plugin/issues"
   },
-  "homepage": "https://github.com/oliviertassinari/serviceworker-webpack-plugin#readme"
+  "homepage": "https://github.com/oliviertassinari/serviceworker-webpack-plugin#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.3.26",
+    "babel-cli": "^6.7.7",
+    "babel-eslint": "^6.0.3",
+    "babel-preset-es2015": "^6.6.0",
+    "eslint": "^2.8.0"
+  }
 }
