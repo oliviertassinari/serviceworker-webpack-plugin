@@ -1,6 +1,8 @@
+/* global swOptions */
+
 export default {
   register(options = {}) {
     return navigator.serviceWorker
-      .register(<%- JSON.stringify(output) %>, options);
-  }
+      .register(swOptions.output, options);
+  },
 };

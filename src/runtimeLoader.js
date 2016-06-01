@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs';
-import ejs from 'ejs';
 
 module.exports = function() {};
 
@@ -22,7 +21,10 @@ module.exports.pitch = function() {
     }
 
     const options = JSON.parse(this.query.slice(1));
-    const output = ejs.render(template, options);
+    const output = `
+      var swOptions = ${JSON.stringify(options)};
+      ${template}
+    `;
     callback(null, output);
   });
 };
