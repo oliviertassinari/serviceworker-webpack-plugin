@@ -1,8 +1,8 @@
-/* global swOptions */
+/* global serviceWorkerOption */
 
 export default {
   register(options = {}) {
     return navigator.serviceWorker
-      .register(swOptions.output, options);
+      .register(serviceWorkerOption.output, options);
   },
 };

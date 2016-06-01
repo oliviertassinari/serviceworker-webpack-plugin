@@ -1,7 +1,6 @@
 import SingleEntryPlugin from 'webpack/lib/SingleEntryPlugin';
 import path from 'path';
 import webpack from 'webpack';
-import deepExtend from 'deep-extend';
 import minimatch from 'minimatch';
 
 function validatePaths(assets, options) {
@@ -25,7 +24,6 @@ function validatePaths(assets, options) {
 }
 
 const ENTRY_NAME = 'serviceworker';
-const DATA_VAR = '__wpsw';
 
 export default class ServiceWorkerPlugin {
   constructor(options) {
@@ -94,29 +92,9 @@ export default class ServiceWorkerPlugin {
     const childCompiler = compilation.createChildCompiler(ENTRY_NAME, {
       filename: this.options.filename,
     });
-    const data = JSON.stringify({
-      data_var_name: DATA_VAR,
-      entry: this.options.entry,
-    });
-
-    const serviceWorkerLoader = path.join(__dirname, 'serviceWorkerLoader.js');
-    let entry = path.join(__dirname, './empty-entry.js');
-    entry = `!!${serviceWorkerLoader}?${data}!${entry}`;
-
     childCompiler.context = compiler.context;
-    childCompiler.apply(new SingleEntryPlugin(compiler.context, entry, ENTRY_NAME));
-
-    (compiler.options.plugins || []).some((plugin2) => {
-      if (plugin2 instanceof webpack.optimize.UglifyJsPlugin) {
-        const options = deepExtend({}, plugin2.options);
-
-        childCompiler.apply(new webpack.optimize.UglifyJsPlugin(options));
-
-        return true;
-      } else {
-        return false;
-      }
-    });
+    childCompiler.apply(new SingleEntryPlugin(
+      compiler.context, this.options.entry, ENTRY_NAME));
 
     // Fix for "Uncaught TypeError: __webpack_require__(...) is not a function"
     // Hot module replacement requires that every child compiler has its own
@@ -165,8 +143,6 @@ export default class ServiceWorkerPlugin {
       assets: assets,
     }, null, minify ? null : '  ');
 
-    let source = `var ${DATA_VAR} = ${data};`;
-
     const asset = compilation.assets[this.options.filename];
 
     if (!asset) {
@@ -178,7 +154,11 @@ export default class ServiceWorkerPlugin {
     }
 
     delete compilation.assets[this.options.filename];
-    source += `\n\n${asset.source()}`;
+
+    const source = `
+      var serviceWorkerOption = ${data};
+      ${asset.source()}
+    `.trim();
 
     compilation.assets[this.options.filename] = {
       source() {

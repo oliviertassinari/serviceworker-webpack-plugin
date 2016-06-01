@@ -21,10 +21,10 @@ module.exports.pitch = function() {
     }
 
     const options = JSON.parse(this.query.slice(1));
-    const output = `
-      var swOptions = ${JSON.stringify(options)};
+    const source = `
+      var serviceWorkerOption = ${JSON.stringify(options)};
       ${template}
-    `;
-    callback(null, output);
+    `.trim();
+    callback(null, source);
   });
 };
