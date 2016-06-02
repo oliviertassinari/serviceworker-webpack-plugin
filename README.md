@@ -8,3 +8,19 @@
 
 [![Dependencies](https://img.shields.io/david/oliviertassinari/serviceworker-webpack-plugin.svg?style=flat-square)](https://david-dm.org/oliviertassinari/serviceworker-webpack-plugin)
 [![DevDependencies](https://img.shields.io/david/dev/oliviertassinari/serviceworker-webpack-plugin.svg?style=flat-square)](https://david-dm.org/oliviertassinari/serviceworker-webpack-plugin#info=devDependencies&view=list)
+
+## Installation
+
+```sh
+npm install serviceworker-webpack-plugin
+```
+
+## Simple example
+
+```js
+
+```
+
+## License
+
+MIT
