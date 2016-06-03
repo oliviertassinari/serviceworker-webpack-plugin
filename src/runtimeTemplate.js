@@ -3,6 +3,6 @@
 export default {
   register(options = {}) {
     return navigator.serviceWorker
-      .register(serviceWorkerOption.output, options);
+      .register(serviceWorkerOption.scriptURL, options);
   },
 };

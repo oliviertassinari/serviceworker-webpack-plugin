@@ -10,6 +10,7 @@ const webpackConfig = {
     path: '/',
     filename: 'bundle.js',
   },
+  devtool: 'eval',
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
@@ -35,6 +36,7 @@ const webpackConfig = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        exclude: /node_modules/,
       },
     ],
   },

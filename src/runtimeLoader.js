@@ -20,9 +20,8 @@ module.exports.pitch = function() {
       return;
     }
 
-    const options = JSON.parse(this.query.slice(1));
     const source = `
-      var serviceWorkerOption = ${JSON.stringify(options)};
+      var serviceWorkerOption = ${this.query.slice(1)};
       ${template}
     `.trim();
     callback(null, source);

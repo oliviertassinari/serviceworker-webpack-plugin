@@ -52,10 +52,10 @@ export default class ServiceWorkerPlugin {
 
     compiler.plugin('normal-module-factory', (nmf) => {
       nmf.plugin('after-resolve', (result, callback) => {
-        // Hijack this step
+        // Hijack the original module
         if (result.resource === runtimePath) {
           const data = {
-            output: this.options.publicPath + this.options.filename,
+            scriptURL: this.options.publicPath + this.options.filename,
           };
 
           result.loaders.push(
