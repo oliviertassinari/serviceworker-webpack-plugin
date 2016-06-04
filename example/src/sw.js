@@ -1,6 +1,6 @@
 /* global serviceWorkerOption */
 /* eslint-disable no-console */
-const DEBUG = true;
+const DEBUG = false;
 
 /**
  * When the user navigates to your site,
@@ -117,24 +117,26 @@ self.addEventListener('fetch', (event) => {
 
     // Load and cache known assets.
     return fetch(request)
-      .then((response2) => {
-        if (!response2 || !response2.ok) {
+      .then((responseNetwork) => {
+        if (!responseNetwork || !responseNetwork.ok) {
           if (DEBUG) {
             console.log(`[SW] URL [${
-              requestUrl.toString}] wrong response2: ${response2.status} ${response2.type}`);
+              requestUrl.toString}] wrong responseNetwork: ${responseNetwork.status} ${responseNetwork.type}`);
           }
 
-          return response2;
+          return responseNetwork;
         }
 
         if (DEBUG) {
           console.log(`[SW] URL ${requestUrl.href} fetched`);
         }
 
+        const responseCache = responseNetwork.clone();
+
         caches
           .open(CACHE_NAME)
           .then((cache) => {
-            return cache.put(request, response2.clone());
+            return cache.put(request, responseCache);
           })
           .then(() => {
             if (DEBUG) {
@@ -142,7 +144,7 @@ self.addEventListener('fetch', (event) => {
             }
           });
 
-        return response2;
+        return responseNetwork;
       })
       .catch(() => {
         // User is landing on our page.
