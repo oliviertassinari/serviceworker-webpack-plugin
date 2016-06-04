@@ -17,6 +17,11 @@ const webpackConfig = {
     }),
     new ServiceWorkerWepbackPlugin({
       entry: path.join(__dirname, 'src/sw.js'),
+      excludes: [
+        '**/.*',
+        '**/*.map',
+        '*.html',
+      ],
     }),
     // new webpack.optimize.UglifyJsPlugin({
     //   compress: {
