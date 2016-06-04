@@ -30,7 +30,7 @@ That's not simple when you are using *Webpack*:
 ### 1. Add the plugin to your webpack config
 
 ```js
-import ServiceWorkerWepbackPlugin from 'ServiceWorkerWepbackPlugin';
+import ServiceWorkerWepbackPlugin from 'serviceworker-webpack-plugin';
 
 ...
 
@@ -45,7 +45,7 @@ import ServiceWorkerWepbackPlugin from 'ServiceWorkerWepbackPlugin';
 ### 2. Register the service worker in your main JS thread
 
 ```js
-import runtime from 'ServiceWorkerWepbackPlugin/runtime';
+import runtime from 'serviceworker-webpack-plugin/runtime';
 
 if ('serviceWorker' in navigator) {
   const registration = runtime.register();

@@ -2,7 +2,7 @@
   "name": "serviceworker-webpack-plugin",
   "version": "0.1.1",
   "description": "Simplifies creation of a service worker to serve your webpack bundles",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "lint": "eslint .",
     "test": "npm run lint",
