@@ -8,7 +8,7 @@ const webpackConfig = {
   entry: './src/index.js',
   output: {
     path: '/',
-    filename: 'bundle.js',
+    filename: '[name].[hash].js',
   },
   devtool: 'eval',
   plugins: [

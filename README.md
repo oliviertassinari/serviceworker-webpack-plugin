@@ -55,13 +55,11 @@ if ('serviceWorker' in navigator) {
 ### 3. Write your own `sw.js`
 
 You can now use the global `serviceWorkerOption` variable in your `sw.js`.
-This object will look something like:
+E.g. In our example this object look like:
 ```js
 {
   assets: [
-    './sw.js',
-    './bundle.js',
-    './index.htm',
+    './main.256334452761ef349e91.js',
   ],
 }
 ```
@@ -92,6 +90,13 @@ specifies the public URL address of the output files when referenced in a browse
 
 - `options`: That's forwarded to the `options` argument of the
 [`ServiceWorkerContainer.register()`](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register) function.
+
+## Credit
+
+- The [offline-plugin](https://github.com/NekR/offline-plugin) package
+was a great source of inspiration.
+- The [html-webpack-plugin](https://github.com/ampedandwired/html-webpack-plugin)
+package was also really helpful.
 
 ## License
 

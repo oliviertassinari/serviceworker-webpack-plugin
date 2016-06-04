@@ -23,7 +23,7 @@ function validatePaths(assets, options) {
     });
 }
 
-const ENTRY_NAME = 'serviceworker';
+const ENTRY_NAME = 'serviceworker-plugin';
 
 export default class ServiceWorkerPlugin {
   constructor(options) {
@@ -93,8 +93,9 @@ export default class ServiceWorkerPlugin {
       filename: this.options.filename,
     });
     childCompiler.context = compiler.context;
-    childCompiler.apply(new SingleEntryPlugin(
-      compiler.context, this.options.entry, ENTRY_NAME));
+    childCompiler.apply(
+      new SingleEntryPlugin(compiler.context, this.options.entry, ENTRY_NAME)
+    );
 
     // Fix for "Uncaught TypeError: __webpack_require__(...) is not a function"
     // Hot module replacement requires that every child compiler has its own
@@ -121,14 +122,25 @@ export default class ServiceWorkerPlugin {
   }
 
   handleEmit(compilation, compiler) {
-    let assets = Object.keys(compilation.assets);
+    const asset = compilation.assets[this.options.filename];
 
+    if (!asset) {
+      compilation.errors.push(
+        new Error('ServiceWorkerPlugin: ServiceWorker entry is not found in output assets')
+      );
+
+      return;
+    }
+
+    delete compilation.assets[this.options.filename];
+
+    let assets = Object.keys(compilation.assets);
     const excludes = this.options.excludes;
 
     if (excludes.length > 0) {
-      assets = assets.filter((asset) => {
+      assets = assets.filter((assetCurrent) => {
         return !excludes.some((glob) => {
-          return minimatch(asset, glob);
+          return minimatch(assetCurrent, glob);
         });
       });
     }
@@ -142,18 +154,6 @@ export default class ServiceWorkerPlugin {
     const data = JSON.stringify({
       assets: assets,
     }, null, minify ? null : '  ');
-
-    const asset = compilation.assets[this.options.filename];
-
-    if (!asset) {
-      compilation.errors.push(
-        new Error('ServiceWorkerPlugin: ServiceWorker entry is not found in output assets')
-      );
-
-      return;
-    }
-
-    delete compilation.assets[this.options.filename];
 
     const source = `
       var serviceWorkerOption = ${data};
