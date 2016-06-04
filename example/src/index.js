@@ -3,7 +3,9 @@
 import runtime from '../../src/runtime';
 import registerEvents from '../../src/browser/registerEvents';
 
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && (window.location.protocol === 'https:' ||
+  window.location.hostname === 'localhost')
+) {
   const registration = runtime.register({
     scope: '/', // Use the root.
   });
@@ -25,6 +27,8 @@ if ('serviceWorker' in navigator) {
       console.log('onUpdated');
     },
   });
+} else {
+  console.log('serviceWorker not available');
 }
 
-alert('JS loader');
+console.log('JS loader');
