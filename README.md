@@ -98,6 +98,23 @@ was a great source of inspiration.
 - The [html-webpack-plugin](https://github.com/ampedandwired/html-webpack-plugin)
 package was also really helpful.
 
+## Why not using the `offline-plugin`?
+
+I wouldn't have been able to write this plugin without the [offline-plugin](https://github.com/NekR/offline-plugin) project.
+Thanks [@NekR](https://github.com/NekR/offline-plugin) for sharing it!
+
+Still, soon after using it, I realized that it wasn't what I was looking for.
+ - The *abstraction* provided was **too high**.
+ (I needed to build some custom fetch logic.)
+ - It was making me even more **dependent** on Wepback.
+ (What if later, I want to switch to another build system?)
+
+Hence, I decided to change the approach and created this **thin layer** on
+top of Webpack to solve the assets name issue. Nothing more.
+
+If you don't care about my two issues with `offline-plugin`
+then you don't need to use this package, `offline-plugin` is great.
+
 ## License
 
 MIT
