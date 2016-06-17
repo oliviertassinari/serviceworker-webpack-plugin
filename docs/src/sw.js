@@ -16,7 +16,7 @@ const CACHE_NAME = (new Date).toISOString();
 
 let assetsToCache = [
   ...assets,
-  '/',
+  './',
 ];
 
 assetsToCache = assetsToCache.map((path) => {
@@ -149,7 +149,7 @@ self.addEventListener('fetch', (event) => {
       .catch(() => {
         // User is landing on our page.
         if (event.request.mode === 'navigate') {
-          return caches.match('/');
+          return caches.match('./');
         } else {
           return null;
         }

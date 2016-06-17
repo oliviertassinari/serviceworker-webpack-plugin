@@ -17,7 +17,7 @@ npm install serviceworker-webpack-plugin
 
 ## The problem solved
 
-When building a service worker, you probably want to [cache all](https://github.com/oliviertassinari/serviceworker-webpack-plugin/blob/master/example/src/sw.js#L38)
+When building a service worker, you probably want to [cache all](https://github.com/oliviertassinari/serviceworker-webpack-plugin/blob/master/docs/src/sw.js#L38)
 your assets during the `install` phase.
 But in order to do so, you need their **names**.
 That's not simple when you are using *Webpack*:
@@ -66,7 +66,7 @@ E.g. In our example this object look like:
 
 ## Simple example
 
-You can have a look at the [`/example`](https://github.com/oliviertassinari/serviceworker-webpack-plugin/tree/master/example)
+You can have a look at the [`/docs`](https://github.com/oliviertassinari/serviceworker-webpack-plugin/tree/master/docs)
 folder if you need a full working example.
 
 ## API
