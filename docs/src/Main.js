@@ -14,7 +14,7 @@ class Main extends Component {
   };
 
   componentDidMount() {
-    this.pushLog('JS loader');
+    this.pushLog('the main JS thread was loaded');
 
     if ('serviceWorker' in navigator && (window.location.protocol === 'https:' ||
       window.location.hostname === 'localhost')
@@ -23,19 +23,19 @@ class Main extends Component {
 
       registerEvents(registration, {
         onInstalled: () => {
-          this.pushLog('onInstalled');
+          this.pushLog('a new serviceworker was installed');
         },
         onUpdateReady: () => {
-          this.pushLog('onUpdateReady');
+          this.pushLog('a new serviceworker update is ready');
         },
         onUpdating: () => {
-          this.pushLog('onUpdating');
+          this.pushLog('a new serviceworker is updating');
         },
         onUpdateFailed: () => {
-          this.pushLog('onUpdateFailed');
+          this.pushLog('a new serviceworker update failed');
         },
         onUpdated: () => {
-          this.pushLog('onUpdated');
+          this.pushLog('a new serviceworker was updated');
         },
       });
     } else {
@@ -72,7 +72,6 @@ class Main extends Component {
           </a>
         </Head>
         <Body>
-          <h2>{'This PWA is ready to work offline'}</h2>
           <h3>{'Logs'}</h3>
           <ul>
             {this.state.logs.map((log, index) => {
