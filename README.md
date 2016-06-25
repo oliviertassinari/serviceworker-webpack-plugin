@@ -1,6 +1,6 @@
 # serviceworker-webpack-plugin
 
-> Simplifies creation of a service worker to serve your webpack bundles
+> Simplifies creation of a service worker to serve your webpack bundles.
 
 [![npm version](https://img.shields.io/npm/v/serviceworker-webpack-plugin.svg?style=flat-square)](https://www.npmjs.com/package/serviceworker-webpack-plugin)
 [![npm downloads](https://img.shields.io/npm/dm/serviceworker-webpack-plugin.svg?style=flat-square)](https://www.npmjs.com/package/serviceworker-webpack-plugin)

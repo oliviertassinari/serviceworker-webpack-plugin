@@ -8,7 +8,7 @@
     "src"
   ],
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint src",
     "test": "npm run lint",
     "prebuild": "rm -rf lib/",
     "build": "babel src --out-dir lib",
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/oliviertassinari/serviceworker-webpack-plugin#readme",
   "dependencies": {
-    "minimatch": "^3.0.0",
+    "minimatch": "^3.0.2",
     "webpack": "^1.13.1"
   },
   "devDependencies": {
