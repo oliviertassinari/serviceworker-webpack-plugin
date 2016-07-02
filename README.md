@@ -30,12 +30,12 @@ That's not simple when you are using *Webpack*:
 ### 1. Add the plugin to your webpack config
 
 ```js
-import ServiceWorkerWepbackPlugin from 'serviceworker-webpack-plugin';
+import ServiceWorkerWebpackPlugin from 'serviceworker-webpack-plugin';
 
 ...
 
   plugins: [
-    new ServiceWorkerWepbackPlugin({
+    new ServiceWorkerWebpackPlugin({
       entry: path.join(__dirname, 'src/sw.js'),
     }),
   ],
@@ -71,7 +71,7 @@ folder if you need a full working example.
 
 ## API
 
-### `ServiceWorkerWepbackPlugin(options)`
+### `ServiceWorkerWebpackPlugin(options)`
 
 - `options`
  - `entry`, **required**, *string*:
