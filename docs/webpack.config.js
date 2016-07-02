@@ -1,7 +1,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ServiceWorkerWepbackPlugin from '../src/index';
+import ServiceWorkerWebpackPlugin from '../src/index';
 import autoprefixer from 'autoprefixer';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
@@ -28,7 +28,7 @@ export default function(options) {
           collapseWhitespace: true,
         },
       }),
-      new ServiceWorkerWepbackPlugin({
+      new ServiceWorkerWebpackPlugin({
         entry: path.join(__dirname, 'src/sw.js'),
         excludes: [
           '**/.*',
