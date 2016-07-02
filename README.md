@@ -45,7 +45,7 @@ import ServiceWorkerWepbackPlugin from 'serviceworker-webpack-plugin';
 ### 2. Register the service worker in your main JS thread
 
 ```js
-import runtime from 'serviceworker-webpack-plugin/runtime';
+import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 
 if ('serviceWorker' in navigator) {
   const registration = runtime.register();
