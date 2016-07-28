@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/oliviertassinari/serviceworker-webpack-plugin#readme",
   "dependencies": {
+    "babel-plugin-add-module-exports": "^0.2.1",
     "minimatch": "^3.0.2",
     "webpack": "^1.13.1"
   },
