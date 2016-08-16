@@ -1,9 +1,9 @@
 import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ServiceWorkerWebpackPlugin from '../src/index';
 import autoprefixer from 'autoprefixer';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import ServiceWorkerWebpackPlugin from '../src/index';
 
 export default function(options) {
   const webpackConfig = {

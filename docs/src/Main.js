@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 import registerEvents from 'serviceworker-webpack-plugin/lib/browser/registerEvents';
 import applyUpdate from 'serviceworker-webpack-plugin/lib/browser/applyUpdate';
-
 import Head from './Head';
 import Body from './Body';
 import Footer from './Footer';
