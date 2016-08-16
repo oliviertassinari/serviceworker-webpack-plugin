@@ -1,3 +1,5 @@
+// @flow weak
+
 function applyUpdate() {
   return new Promise((resolve, reject) => {
     navigator.serviceWorker.getRegistration()

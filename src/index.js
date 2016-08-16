@@ -1,6 +1,6 @@
-import SingleEntryPlugin from 'webpack/lib/SingleEntryPlugin';
 import path from 'path';
 import webpack from 'webpack';
+import SingleEntryPlugin from 'webpack/lib/SingleEntryPlugin';
 import minimatch from 'minimatch';
 
 function validatePaths(assets, options) {
