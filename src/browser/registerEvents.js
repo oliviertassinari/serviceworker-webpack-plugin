@@ -1,3 +1,5 @@
+// @flow weak
+
 function registerEvents(registration, callbacks) {
   const sendEvent = function(event) {
     if (typeof callbacks[event] === 'function') {

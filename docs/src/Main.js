@@ -1,4 +1,6 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
 /* eslint-disable no-console */
+
 import React, {Component} from 'react';
 import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 import registerEvents from 'serviceworker-webpack-plugin/lib/browser/registerEvents';

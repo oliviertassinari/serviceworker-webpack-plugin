@@ -1,0 +1,13 @@
+[ignore]
+
+.*/node_modules/fbjs/*
+
+[libs]
+
+[options]
+esproposal.class_instance_fields=enable
+
+module.name_mapper='.*\.\(scss\)$' -> '<PROJECT_ROOT>/flow/stubs/url-loader.js'
+module.name_mapper='^serviceworker-webpack-plugin/lib/$' -> '<PROJECT_ROOT>/src/'
+
+suppress_type=$FlowIssue

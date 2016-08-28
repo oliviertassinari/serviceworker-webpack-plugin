@@ -2,19 +2,23 @@
 
 function applyUpdate() {
   return new Promise((resolve, reject) => {
-    navigator.serviceWorker.getRegistration()
-      .then((registration) => {
-        if (!registration || !registration.waiting) {
-          reject();
-          return;
-        }
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.getRegistration()
+        .then((registration) => {
+          if (!registration || !registration.waiting) {
+            reject();
+            return;
+          }
 
-        registration.waiting.postMessage({
-          action: 'skipWaiting',
+          registration.waiting.postMessage({
+            action: 'skipWaiting',
+          });
+
+          resolve();
         });
-
-        resolve();
-      });
+    } else {
+      reject();
+    }
   });
 }
 

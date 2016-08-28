@@ -1,5 +1,6 @@
-/* global serviceWorkerOption */
+// @flow weak
 /* eslint-disable no-console */
+
 const DEBUG = false;
 
 /**
@@ -10,7 +11,7 @@ const DEBUG = false;
  */
 const {
   assets,
-} = serviceWorkerOption;
+} = global.serviceWorkerOption;
 
 const CACHE_NAME = (new Date).toISOString();
 
@@ -20,7 +21,7 @@ let assetsToCache = [
 ];
 
 assetsToCache = assetsToCache.map((path) => {
-  return new URL(path, location).toString();
+  return new URL(path, global.location).toString();
 });
 
 // When the service worker is first added to a computer.
@@ -32,7 +33,7 @@ self.addEventListener('install', (event) => {
 
   // Add core website files to cache during serviceworker installation.
   event.waitUntil(
-    caches
+    global.caches
       .open(CACHE_NAME)
       .then((cache) => {
         return cache.addAll(assetsToCache);
@@ -57,7 +58,7 @@ self.addEventListener('activate', (event) => {
 
   // Clean the caches
   event.waitUntil(
-    caches
+    global.caches
       .keys()
       .then((cacheNames) => {
         return Promise.all(
@@ -66,7 +67,7 @@ self.addEventListener('activate', (event) => {
             if (cacheName.indexOf(CACHE_NAME) === 0) {
               return null;
             } else {
-              return caches.delete(cacheName);
+              return global.caches.delete(cacheName);
             }
           })
         );
@@ -105,7 +106,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  const resource = caches.match(request)
+  const resource = global.caches.match(request)
   .then((response) => {
     if (response) {
       if (DEBUG) {
@@ -121,7 +122,7 @@ self.addEventListener('fetch', (event) => {
         if (!responseNetwork || !responseNetwork.ok) {
           if (DEBUG) {
             console.log(`[SW] URL [${
-              requestUrl.toString}] wrong responseNetwork: ${responseNetwork.status} ${responseNetwork.type}`);
+              requestUrl.toString()}] wrong responseNetwork: ${responseNetwork.status} ${responseNetwork.type}`);
           }
 
           return responseNetwork;
@@ -133,7 +134,7 @@ self.addEventListener('fetch', (event) => {
 
         const responseCache = responseNetwork.clone();
 
-        caches
+        global.caches
           .open(CACHE_NAME)
           .then((cache) => {
             return cache.put(request, responseCache);
@@ -149,7 +150,7 @@ self.addEventListener('fetch', (event) => {
       .catch(() => {
         // User is landing on our page.
         if (event.request.mode === 'navigate') {
-          return caches.match('./');
+          return global.caches.match('./');
         } else {
           return null;
         }

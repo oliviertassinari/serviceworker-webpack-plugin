@@ -1,3 +1,5 @@
+// @flow weak
+
 import path from 'path';
 import webpack from 'webpack';
 import SingleEntryPlugin from 'webpack/lib/SingleEntryPlugin';
@@ -26,6 +28,9 @@ function validatePaths(assets, options) {
 const ENTRY_NAME = 'serviceworker-plugin';
 
 export default class ServiceWorkerPlugin {
+  options = [];
+  warnings = [];
+
   constructor(options) {
     this.options = Object.assign({
       publicPath: '',
@@ -36,8 +41,6 @@ export default class ServiceWorkerPlugin {
     }, options);
 
     this.options.filename = this.options.filename.replace(/^\//, '');
-
-    this.warnings = [];
 
     if (this.options.relativePaths && this.options.publicPath) {
       this.warnings.push(
@@ -153,7 +156,7 @@ export default class ServiceWorkerPlugin {
 
     const data = JSON.stringify({
       assets: assets,
-    }, null, minify ? null : '  ');
+    }, null, minify ? 0 : 2);
 
     const source = `
       var serviceWorkerOption = ${data};
