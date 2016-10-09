@@ -17,11 +17,13 @@ function validatePaths(assets, options) {
         return key;
       }
 
-      if (options.relativePaths) {
-        return basePath + key.replace(/^\//, '');
+      key = key.replace(/^\//, '');
+
+      if (options.publicPath !== '') {
+        return options.publicPath + key;
       }
 
-      return options.publicPath + key.replace(/^\//, '');
+      return basePath + key;
     });
 }
 
@@ -32,6 +34,13 @@ export default class ServiceWorkerPlugin {
   warnings = [];
 
   constructor(options) {
+    if (options.relativePaths && options.publicPath) {
+      this.warnings.push(
+        new Error(`ServiceWorkerPlugin: publicPath is used in conjunction with relativePaths,
+          relativePaths was set by the ServiceWorkerPlugin to false.`)
+      );
+    }
+
     this.options = Object.assign({
       publicPath: '',
       relativePaths: true,
@@ -41,13 +50,6 @@ export default class ServiceWorkerPlugin {
     }, options);
 
     this.options.filename = this.options.filename.replace(/^\//, '');
-
-    if (this.options.relativePaths && this.options.publicPath) {
-      this.warnings.push(
-        new Error(`ServiceWorkerPlugin: publicPath is used in conjunction with relativePaths,
-          publicPath was set by the ServiceWorkerPlugin to empty string`)
-      );
-    }
   }
 
   apply(compiler) {
