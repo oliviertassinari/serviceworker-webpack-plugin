@@ -23,6 +23,7 @@ But in order to do so, you need their **names**.
 That's not simple when you are using *Webpack*:
 - The assets names are *non-deterministic* when taking advantage of the long term caching.
 - The assets list can even evolve over time as you add splitting points or more resources.
+- You want to be able to use your service worker with the **dev-server** mode of Webpack.
 - You want to keep the build process as simple as possible.
 
 ## Setup
