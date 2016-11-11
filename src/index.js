@@ -34,19 +34,12 @@ export default class ServiceWorkerPlugin {
   warnings = [];
 
   constructor(options) {
-    if (options.relativePaths && options.publicPath) {
-      this.warnings.push(
-        new Error(`ServiceWorkerPlugin: publicPath is used in conjunction with relativePaths,
-          relativePaths was set by the ServiceWorkerPlugin to false.`),
-      );
-    }
-
     this.options = Object.assign({
       publicPath: '',
-      relativePaths: true,
       excludes: ['**/.*', '**/*.map'],
       entry: null,
       filename: 'sw.js',
+      template: () => Promise.resolve(''),
     }, options);
 
     this.options.filename = this.options.filename.replace(/^\//, '');
@@ -87,9 +80,7 @@ export default class ServiceWorkerPlugin {
     });
 
     compiler.plugin('emit', (compilation, callback) => {
-      this.handleEmit(compilation, compiler);
-
-      callback();
+      this.handleEmit(compilation, compiler, callback);
     });
   }
 
@@ -127,7 +118,7 @@ export default class ServiceWorkerPlugin {
     });
   }
 
-  handleEmit(compilation, compiler) {
+  handleEmit(compilation, compiler, callback) {
     const asset = compilation.assets[this.options.filename];
 
     if (!asset) {
@@ -157,18 +148,27 @@ export default class ServiceWorkerPlugin {
       return plugin instanceof webpack.optimize.UglifyJsPlugin;
     });
 
-    const data = JSON.stringify({
+    const serviceWorkerOption = {
       assets,
-    }, null, minify ? 0 : 2);
-
-    const source = `
-      var serviceWorkerOption = ${data};
-      ${asset.source()}
-    `.trim();
-
-    compilation.assets[this.options.filename] = {
-      source: () => source,
-      size: () => Buffer.byteLength(source, 'utf8'),
     };
+
+    const templatePromise = this.options.template(serviceWorkerOption);
+
+    templatePromise.then((template) => {
+      const serviceWorkerOptionInline = JSON.stringify(serviceWorkerOption, null, minify ? 0 : 2);
+
+      const source = `
+        var serviceWorkerOption = ${serviceWorkerOptionInline};
+        ${template}
+        ${asset.source()}
+      `.trim();
+
+      compilation.assets[this.options.filename] = {
+        source: () => source,
+        size: () => Buffer.byteLength(source, 'utf8'),
+      };
+
+      callback();
+    });
   }
 }

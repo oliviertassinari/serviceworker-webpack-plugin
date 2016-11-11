@@ -81,11 +81,11 @@ Path to the actual service worker implementation.
 Relative (from the webpack's config `output.path`) output path for emitted script.
  - `excludes`, *array*, default `['**/.*', '**/*.map']`:
 Excludes matches assets from being added to the `serviceWorkerOption.assets` variable.
- - `relativePaths`, *boolean*, default `true`:
-When set to `true`, all cache asset paths are generated relatively to the ServiceWorker
-file and `publichPath` option is ignored.
  - `publicPath`, *string*, default `''`:
 specifies the public URL address of the output files when referenced in a browser.
+ - `template`, *function*, default noop:
+This callback function can be used to inject statically generated service worker.
+It's taking a `serviceWorkerOption` argument and must return a promise.
 
 ### `runtime(options)`
 
