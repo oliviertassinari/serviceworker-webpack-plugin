@@ -7,7 +7,7 @@ import autoprefixer from 'autoprefixer';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import ServiceWorkerWebpackPlugin from '../src/index';
 
-export default function(options) {
+export default function (options) {
   const webpackConfig = {
     entry: [
       './src/app.js',
@@ -93,7 +93,7 @@ export default function(options) {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract(
           'style-loader',
-          'css-loader!postcss-loader!sass-loader'
+          'css-loader!postcss-loader!sass-loader',
         ),
       },
     ];

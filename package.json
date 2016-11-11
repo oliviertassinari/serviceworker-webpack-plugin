@@ -8,7 +8,7 @@
     "src"
   ],
   "scripts": {
-    "lint": "eslint src docs/src",
+    "lint": "eslint .",
     "test": "npm run lint && npm run flow",
     "prebuild": "rm -rf lib/",
     "flow": "flow",
