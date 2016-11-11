@@ -5,8 +5,8 @@ export default {
   register(options = {}) {
     if (navigator.serviceWorker) {
       return navigator.serviceWorker.register(serviceWorkerOption.scriptURL, options);
-    } else {
-      return false;
     }
+
+    return false;
   },
 };

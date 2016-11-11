@@ -3,10 +3,10 @@
 import path from 'path';
 import fs from 'fs';
 
-module.exports = function() {};
+module.exports = function defaultExport() {};
 
 // The loaders are called from right to left.
-module.exports.pitch = function() {
+module.exports.pitch = function pitch() {
   // Makes the loader asyn.
   const callback = this.async();
   const templatePath = path.join(__dirname, './runtimeTemplate.js');

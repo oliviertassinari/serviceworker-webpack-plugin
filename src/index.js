@@ -37,7 +37,7 @@ export default class ServiceWorkerPlugin {
     if (options.relativePaths && options.publicPath) {
       this.warnings.push(
         new Error(`ServiceWorkerPlugin: publicPath is used in conjunction with relativePaths,
-          relativePaths was set by the ServiceWorkerPlugin to false.`)
+          relativePaths was set by the ServiceWorkerPlugin to false.`),
       );
     }
 
@@ -64,7 +64,7 @@ export default class ServiceWorkerPlugin {
           };
 
           result.loaders.push(
-            `${path.join(__dirname, 'runtimeLoader.js')}?${JSON.stringify(data)}`
+            `${path.join(__dirname, 'runtimeLoader.js')}?${JSON.stringify(data)}`,
           );
         }
 
@@ -99,7 +99,7 @@ export default class ServiceWorkerPlugin {
     });
     childCompiler.context = compiler.context;
     childCompiler.apply(
-      new SingleEntryPlugin(compiler.context, this.options.entry, ENTRY_NAME)
+      new SingleEntryPlugin(compiler.context, this.options.entry, ENTRY_NAME),
     );
 
     // Fix for "Uncaught TypeError: __webpack_require__(...) is not a function"
@@ -131,7 +131,7 @@ export default class ServiceWorkerPlugin {
 
     if (!asset) {
       compilation.errors.push(
-        new Error('ServiceWorkerPlugin: ServiceWorker entry is not found in output assets')
+        new Error('ServiceWorkerPlugin: ServiceWorker entry is not found in output assets'),
       );
 
       return;
@@ -157,7 +157,7 @@ export default class ServiceWorkerPlugin {
     });
 
     const data = JSON.stringify({
-      assets: assets,
+      assets,
     }, null, minify ? 0 : 2);
 
     const source = `

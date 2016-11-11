@@ -13,7 +13,7 @@ const {
   assets,
 } = global.serviceWorkerOption;
 
-const CACHE_NAME = (new Date).toISOString();
+const CACHE_NAME = (new Date()).toISOString();
 
 let assetsToCache = [
   ...assets,
@@ -46,7 +46,7 @@ self.addEventListener('install', (event) => {
       .catch((error) => {
         console.error(error);
         throw error;
-      })
+      }),
   );
 });
 
@@ -66,12 +66,12 @@ self.addEventListener('activate', (event) => {
             // Delete the caches that are not the current one.
             if (cacheName.indexOf(CACHE_NAME) === 0) {
               return null;
-            } else {
-              return global.caches.delete(cacheName);
             }
-          })
+
+            return global.caches.delete(cacheName);
+          }),
         );
-      })
+      }),
   );
 });
 
@@ -81,6 +81,8 @@ self.addEventListener('message', (event) => {
       if (self.skipWaiting) {
         self.skipWaiting();
       }
+      break;
+    default:
       break;
   }
 });
@@ -107,55 +109,56 @@ self.addEventListener('fetch', (event) => {
   }
 
   const resource = global.caches.match(request)
-  .then((response) => {
-    if (response) {
-      if (DEBUG) {
-        console.log(`[SW] fetch URL ${requestUrl.href} from cache`);
+    .then((response) => {
+      if (response) {
+        if (DEBUG) {
+          console.log(`[SW] fetch URL ${requestUrl.href} from cache`);
+        }
+
+        return response;
       }
 
-      return response;
-    }
+      // Load and cache known assets.
+      return fetch(request)
+        .then((responseNetwork) => {
+          if (!responseNetwork || !responseNetwork.ok) {
+            if (DEBUG) {
+              console.log(`[SW] URL [${
+                requestUrl.toString()}] wrong responseNetwork: ${
+                responseNetwork.status} ${responseNetwork.type}`);
+            }
 
-    // Load and cache known assets.
-    return fetch(request)
-      .then((responseNetwork) => {
-        if (!responseNetwork || !responseNetwork.ok) {
-          if (DEBUG) {
-            console.log(`[SW] URL [${
-              requestUrl.toString()}] wrong responseNetwork: ${responseNetwork.status} ${responseNetwork.type}`);
+            return responseNetwork;
           }
 
+          if (DEBUG) {
+            console.log(`[SW] URL ${requestUrl.href} fetched`);
+          }
+
+          const responseCache = responseNetwork.clone();
+
+          global.caches
+            .open(CACHE_NAME)
+            .then((cache) => {
+              return cache.put(request, responseCache);
+            })
+            .then(() => {
+              if (DEBUG) {
+                console.log(`[SW] Cache asset: ${requestUrl.href}`);
+              }
+            });
+
           return responseNetwork;
-        }
+        })
+        .catch(() => {
+          // User is landing on our page.
+          if (event.request.mode === 'navigate') {
+            return global.caches.match('./');
+          }
 
-        if (DEBUG) {
-          console.log(`[SW] URL ${requestUrl.href} fetched`);
-        }
-
-        const responseCache = responseNetwork.clone();
-
-        global.caches
-          .open(CACHE_NAME)
-          .then((cache) => {
-            return cache.put(request, responseCache);
-          })
-          .then(() => {
-            if (DEBUG) {
-              console.log(`[SW] Cache asset: ${requestUrl.href}`);
-            }
-          });
-
-        return responseNetwork;
-      })
-      .catch(() => {
-        // User is landing on our page.
-        if (event.request.mode === 'navigate') {
-          return global.caches.match('./');
-        } else {
           return null;
-        }
-      });
-  });
+        });
+    });
 
   event.respondWith(resource);
 });

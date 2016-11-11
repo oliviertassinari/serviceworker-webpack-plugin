@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* eslint-disable no-console */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 import registerEvents from 'serviceworker-webpack-plugin/lib/browser/registerEvents';
 import applyUpdate from 'serviceworker-webpack-plugin/lib/browser/applyUpdate';
@@ -80,9 +80,9 @@ class Main extends Component {
                 return (
                   <li key={index}>
                     {`${log} `}
-                    <a href="#" onClick={this.handleClickReload}>
+                    <button onClick={this.handleClickReload}>
                       {'Reload'}
-                    </a>
+                    </button>
                   </li>
                 );
               }

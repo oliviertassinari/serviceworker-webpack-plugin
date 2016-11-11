@@ -1,7 +1,7 @@
 // @flow weak
 
 function registerEvents(registration, callbacks) {
-  const sendEvent = function(event) {
+  const sendEvent = (event) => {
     if (typeof callbacks[event] === 'function') {
       callbacks[event]();
     }
@@ -15,23 +15,6 @@ function registerEvents(registration, callbacks) {
     if (!serviceworker || serviceworker.onstatechange) {
       return;
     }
-
-    let stateChangeHandler;
-
-    // Already has SW
-    if (registration2.active) {
-      onUpdateStateChange();
-      stateChangeHandler = onUpdateStateChange;
-    } else {
-      onInstallStateChange();
-      stateChangeHandler = onInstallStateChange;
-    }
-
-    if (registration2.waiting) {
-      ignoreWaiting = true;
-    }
-
-    serviceworker.onstatechange = stateChangeHandler;
 
     function onUpdateStateChange() {
       switch (serviceworker.state) {
@@ -53,6 +36,9 @@ function registerEvents(registration, callbacks) {
         case 'activated':
           sendEvent('onUpdated');
           serviceworker.onstatechange = null;
+          break;
+
+        default:
           break;
       }
     }
@@ -76,13 +62,33 @@ function registerEvents(registration, callbacks) {
           sendEvent('onInstalled');
           serviceworker.onstatechange = null;
           break;
+
+        default:
+          break;
       }
     }
+
+    let stateChangeHandler;
+
+    // Already has SW
+    if (registration2.active) {
+      onUpdateStateChange();
+      stateChangeHandler = onUpdateStateChange;
+    } else {
+      onInstallStateChange();
+      stateChangeHandler = onInstallStateChange;
+    }
+
+    if (registration2.waiting) {
+      ignoreWaiting = true;
+    }
+
+    serviceworker.onstatechange = stateChangeHandler;
   };
 
   registration.then((registration2) => {
     handleUpdating(registration2);
-    registration2.onupdatefound = function() {
+    registration2.onupdatefound = () => {
       handleUpdating(registration2);
     };
   }).catch((err) => {
