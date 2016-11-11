@@ -27,7 +27,7 @@ function validatePaths(assets, options) {
     });
 }
 
-const ENTRY_NAME = 'serviceworker-plugin';
+const COMPILER_NAME = 'serviceworker-plugin';
 
 export default class ServiceWorkerPlugin {
   options = [];
@@ -94,12 +94,12 @@ export default class ServiceWorkerPlugin {
   }
 
   handleMake(compilation, compiler) {
-    const childCompiler = compilation.createChildCompiler(ENTRY_NAME, {
+    const childCompiler = compilation.createChildCompiler(COMPILER_NAME, {
       filename: this.options.filename,
     });
     childCompiler.context = compiler.context;
     childCompiler.apply(
-      new SingleEntryPlugin(compiler.context, this.options.entry, ENTRY_NAME),
+      new SingleEntryPlugin(compiler.context, this.options.entry),
     );
 
     // Fix for "Uncaught TypeError: __webpack_require__(...) is not a function"
@@ -107,13 +107,14 @@ export default class ServiceWorkerPlugin {
     // cache. @see https://github.com/ampedandwired/html-webpack-plugin/pull/179
     childCompiler.plugin('compilation', (compilation2) => {
       if (compilation2.cache) {
-        if (!compilation2.cache[ENTRY_NAME]) {
-          compilation2.cache[ENTRY_NAME] = {};
+        if (!compilation2.cache[COMPILER_NAME]) {
+          compilation2.cache[COMPILER_NAME] = {};
         }
-        compilation2.cache = compilation2.cache[ENTRY_NAME];
+        compilation2.cache = compilation2.cache[COMPILER_NAME];
       }
     });
 
+    // Compile and return a promise.
     return new Promise((resolve, reject) => {
       childCompiler.runAsChild((err) => {
         if (err) {
@@ -166,12 +167,8 @@ export default class ServiceWorkerPlugin {
     `.trim();
 
     compilation.assets[this.options.filename] = {
-      source() {
-        return source;
-      },
-      size() {
-        return Buffer.byteLength(source, 'utf8');
-      },
+      source: () => source,
+      size: () => Buffer.byteLength(source, 'utf8'),
     };
   }
 }
