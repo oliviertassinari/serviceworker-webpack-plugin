@@ -16,6 +16,10 @@ function registerEvents(registration, callbacks) {
       return;
     }
 
+    if (registration2.waiting) {
+      ignoreWaiting = true;
+    }
+
     function onUpdateStateChange() {
       switch (serviceworker.state) {
         case 'redundant':
@@ -50,14 +54,6 @@ function registerEvents(registration, callbacks) {
           serviceworker.onstatechange = null;
           break;
 
-        case 'installing':
-          // Installing, ignore
-          break;
-
-        case 'installed':
-          // Installed, wait activation
-          break;
-
         case 'activated':
           sendEvent('onInstalled');
           serviceworker.onstatechange = null;
@@ -70,17 +66,13 @@ function registerEvents(registration, callbacks) {
 
     let stateChangeHandler;
 
-    // Already has SW
+    // Already has a SW
     if (registration2.active) {
       onUpdateStateChange();
       stateChangeHandler = onUpdateStateChange;
     } else {
       onInstallStateChange();
       stateChangeHandler = onInstallStateChange;
-    }
-
-    if (registration2.waiting) {
-      ignoreWaiting = true;
     }
 
     serviceworker.onstatechange = stateChangeHandler;

@@ -116,6 +116,10 @@ top of Webpack to solve the assets name issue. Nothing more.
 If you don't care about my two issues with `offline-plugin`
 then you don't need to use this package, `offline-plugin` is great.
 
+## The specs
+
+- [Service Workers](https://w3c.github.io/ServiceWorker/)
+
 ## License
 
 MIT

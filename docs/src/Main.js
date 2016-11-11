@@ -24,19 +24,20 @@ class Main extends Component {
 
       registerEvents(registration, {
         onInstalled: () => {
-          this.pushLog('a new serviceworker was installed');
+          this.pushLog('onInstalled');
         },
         onUpdateReady: () => {
-          this.pushLog('a new serviceworker update is ready');
+          this.pushLog('onUpdateReady');
         },
+
         onUpdating: () => {
-          this.pushLog('a new serviceworker is updating');
+          this.pushLog('onUpdating');
         },
         onUpdateFailed: () => {
-          this.pushLog('a new serviceworker update failed');
+          this.pushLog('onUpdateFailed');
         },
         onUpdated: () => {
-          this.pushLog('a new serviceworker was updated');
+          this.pushLog('onUpdated');
         },
       });
     } else {
@@ -76,18 +77,46 @@ class Main extends Component {
           <h3>{'Logs'}</h3>
           <ul>
             {this.state.logs.map((log, index) => {
-              if (log === 'onUpdateReady') {
-                return (
-                  <li key={index}>
-                    {`${log} `}
+              let message;
+              let more;
+
+              switch (log) {
+                case 'onInstalled':
+                  message = 'a new serviceworker was installed';
+                  break;
+
+                case 'onUpdateReady':
+                  message = 'a new serviceworker update is ready';
+                  more = (
                     <button onClick={this.handleClickReload}>
                       {'Reload'}
                     </button>
-                  </li>
-                );
+                  );
+                  break;
+
+                case 'onUpdating':
+                  message = 'a new serviceworker is updating';
+                  break;
+
+                case 'onUpdateFailed':
+                  message = 'a new serviceworker update failed';
+                  break;
+
+                case 'onUpdated':
+                  message = 'a new serviceworker was updated';
+                  break;
+
+                default:
+                  message = log;
+                  break;
               }
 
-              return <li key={index}>{log}</li>;
+              return (
+                <li key={index}>
+                  {message}
+                  {more}
+                </li>
+              );
             })}
           </ul>
           <Footer

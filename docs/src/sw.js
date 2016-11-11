@@ -80,6 +80,7 @@ self.addEventListener('message', (event) => {
     case 'skipWaiting':
       if (self.skipWaiting) {
         self.skipWaiting();
+        self.clients.claim();
       }
       break;
     default:
