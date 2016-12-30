@@ -6,4 +6,4 @@ import Main from './Main';
 import './normalize.scss';
 import './stylesheet.scss';
 
-render(<Main />, document.getElementById('main'));
+render(<Main />, document.querySelector('#main'));
