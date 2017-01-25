@@ -1,0 +1,3 @@
+// @flow weak
+
+module.exports = {};

@@ -30,7 +30,7 @@ export default {
       },
       {
         test: /\.scss$/,
-        loaders: [
+        use: [
           'style-loader',
           'css-loader',
           'postcss-loader',
