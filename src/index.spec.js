@@ -35,7 +35,7 @@ describe('ServiceWorkerPlugin', () => {
           assert.strictEqual(compilation.assets[filename].source(), trim(`
 var serviceWorkerOption = {
   "assets": [
-    "./bar.js"
+    "/bar.js"
   ]
 };`));
         });

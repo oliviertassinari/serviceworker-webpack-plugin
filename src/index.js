@@ -35,7 +35,7 @@ export default class ServiceWorkerPlugin {
 
   constructor(options) {
     this.options = Object.assign({
-      publicPath: '',
+      publicPath: '/',
       excludes: ['**/.*', '**/*.map'],
       includes: ['**/*'],
       entry: null,

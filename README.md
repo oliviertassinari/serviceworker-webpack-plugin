@@ -83,7 +83,7 @@ Relative (from the webpack's config `output.path`) output path for emitted scrip
 Exclude matched assets from being added to the `serviceWorkerOption.assets` variable. (Blacklist)
  - `includes`, *array*, default `['**/*']`:
 Include matched assets added to the `serviceWorkerOption.assets` variable. (Whitelist)
- - `publicPath`, *string*, default `''`:
+ - `publicPath`, *string*, default `'/'`:
 Specifies the public URL address of the output files when referenced in a browser.
  - `template`, *function*, default noop:
 This callback function can be used to inject statically generated service worker.
