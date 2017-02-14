@@ -1,5 +1,5 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
-/* eslint-disable no-console */
+/* eslint-disable flowtype/require-valid-file-annotation, no-console */
+/* eslint-disable react/no-array-index-key */
 
 import React, { Component } from 'react';
 import runtime from 'serviceworker-webpack-plugin/lib/runtime';

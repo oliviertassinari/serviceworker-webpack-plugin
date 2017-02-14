@@ -23,7 +23,7 @@ const Head = (props) => {
 };
 
 Head.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
   description: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
 };
