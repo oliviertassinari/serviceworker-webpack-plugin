@@ -37,6 +37,7 @@ export default class ServiceWorkerPlugin {
     this.options = Object.assign({
       publicPath: '',
       excludes: ['**/.*', '**/*.map'],
+      includes: ['**/*'],
       entry: null,
       filename: 'sw.js',
       template: () => Promise.resolve(''),
@@ -137,6 +138,16 @@ export default class ServiceWorkerPlugin {
     if (excludes.length > 0) {
       assets = assets.filter((assetCurrent) => {
         return !excludes.some((glob) => {
+          return minimatch(assetCurrent, glob);
+        });
+      });
+    }
+
+    const includes = this.options.includes;
+
+    if (includes.length > 0) {
+      assets = assets.filter((assetCurrent) => {
+        return includes.some((glob) => {
           return minimatch(assetCurrent, glob);
         });
       });
