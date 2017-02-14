@@ -127,7 +127,7 @@ export default class ServiceWorkerPlugin {
         new Error('ServiceWorkerPlugin: ServiceWorker entry is not found in output assets'),
       );
 
-      return;
+      return Promise.reject();
     }
 
     delete compilation.assets[this.options.filename];
@@ -165,7 +165,7 @@ export default class ServiceWorkerPlugin {
 
     const templatePromise = this.options.template(serviceWorkerOption);
 
-    templatePromise.then((template) => {
+    return templatePromise.then((template) => {
       const serviceWorkerOptionInline = JSON.stringify(serviceWorkerOption, null, minify ? 0 : 2);
 
       const source = `
