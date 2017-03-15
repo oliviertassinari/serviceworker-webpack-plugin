@@ -122,6 +122,25 @@ export default class ServiceWorkerPlugin {
   handleEmit(compilation, compiler, callback) {
     const asset = compilation.assets[this.options.filename];
 
+    const jsonStats = compilation.getStats().toJson({
+      hash: false,
+      publicPath: false,
+      assets: false,
+      chunks: false,
+      modules: true,
+      source: false,
+      errorDetails: false,
+      timings: false,
+    });
+    const modules = jsonStats.modules.filter((module) => module.assets.length > 0);
+    const issuerAssets = {};
+    modules.forEach((module) => {
+      if (!issuerAssets[module.issuerName]) {
+        issuerAssets[module.issuerName] = [];
+      }
+      issuerAssets[module.issuerName].push(...module.assets);
+    });
+
     if (!asset) {
       compilation.errors.push(
         new Error('ServiceWorkerPlugin: ServiceWorker entry is not found in output assets'),
@@ -161,6 +180,7 @@ export default class ServiceWorkerPlugin {
 
     const serviceWorkerOption = {
       assets,
+      issuerAssets,
     };
 
     const templatePromise = this.options.template(serviceWorkerOption);

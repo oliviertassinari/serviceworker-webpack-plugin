@@ -25,6 +25,24 @@ describe('ServiceWorkerPlugin', () => {
           'bar.js': {},
           'foo.js': {},
         },
+        getStats: () => ({
+          toJson: () => ({
+            modules: [
+              {
+                issuerName: './src/header.js',
+                assets: ['images/banner.png'],
+              },
+              {
+                issuerName: './src/header.js',
+                assets: ['images/logo.png'],
+              },
+              {
+                issuerName: './src/footer.js',
+                assets: [],
+              },
+            ],
+          }),
+        }),
       };
 
       return serviceWorkerPlugin
@@ -36,7 +54,13 @@ describe('ServiceWorkerPlugin', () => {
 var serviceWorkerOption = {
   "assets": [
     "/bar.js"
-  ]
+  ],
+  "issuerAssets": {
+    "./src/header.js": [
+      "images/banner.png",
+      "images/logo.png"
+    ]
+  }
 };`));
         });
     });
