@@ -41,6 +41,9 @@ export default class ServiceWorkerPlugin {
       entry: null,
       filename: 'sw.js',
       template: () => Promise.resolve(''),
+      transformOptions: (serviceWorkerOption) => ({
+        assets: serviceWorkerOption.assets,
+      }),
     }, options);
 
     this.options.filename = this.options.filename.replace(/^\//, '');
@@ -130,6 +133,17 @@ export default class ServiceWorkerPlugin {
       return Promise.reject();
     }
 
+    const jsonStats = compilation.getStats().toJson({
+      hash: false,
+      publicPath: false,
+      assets: true,
+      chunks: false,
+      modules: true,
+      source: false,
+      errorDetails: false,
+      timings: false,
+    });
+
     delete compilation.assets[this.options.filename];
 
     let assets = Object.keys(compilation.assets);
@@ -159,9 +173,10 @@ export default class ServiceWorkerPlugin {
       return plugin instanceof webpack.optimize.UglifyJsPlugin;
     });
 
-    const serviceWorkerOption = {
+    const serviceWorkerOption = this.options.transformOptions({
       assets,
-    };
+      jsonStats,
+    });
 
     const templatePromise = this.options.template(serviceWorkerOption);
 

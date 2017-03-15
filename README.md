@@ -56,7 +56,7 @@ if ('serviceWorker' in navigator) {
 ### 3. Write your own `sw.js`
 
 You can now use the global `serviceWorkerOption` variable in your `sw.js`.
-E.g. In our example this object look like:
+E.g. In our example this object looks like:
 ```js
 {
   assets: [
@@ -88,6 +88,9 @@ Specifies the public URL address of the output files when referenced in a browse
  - `template`, *function*, default noop:
 This callback function can be used to inject statically generated service worker.
 It's taking a `serviceWorkerOption` argument and must return a promise.
+- `transformOptions`, *function*:
+This callback function receives a raw `serviceWorkerOption` argument.
+The `jsonStats` key contains all the webpack build information.
 
 ### `runtime(options)`
 
@@ -109,7 +112,7 @@ Thanks [@NekR](https://github.com/NekR/offline-plugin) for sharing it!
 Still, soon after using it, I realized that it wasn't what I was looking for.
  - The *abstraction* provided was **too high**.
  (I needed to build some custom fetch logic.)
- - It was making me even more **dependent** on Webpack.
+ - It was making me, even more, **dependent** on Webpack.
  (What if later, I want to switch to another build system?)
 
 Hence, I decided to change the approach and created this **thin layer** on
