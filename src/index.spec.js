@@ -27,6 +27,12 @@ describe('ServiceWorkerPlugin', () => {
         },
         getStats: () => ({
           toJson: () => ({
+            assetsByChunkName: {
+              main: [
+                'bar.js',
+                'foo.js',
+              ],
+            },
             modules: [
               {
                 issuerName: './src/header.js',
@@ -59,6 +65,12 @@ var serviceWorkerOption = {
     "./src/header.js": [
       "images/banner.png",
       "images/logo.png"
+    ]
+  },
+  "chunkAssets": {
+    "main": [
+      "bar.js",
+      "foo.js"
     ]
   }
 };`));

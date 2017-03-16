@@ -125,7 +125,7 @@ export default class ServiceWorkerPlugin {
     const jsonStats = compilation.getStats().toJson({
       hash: false,
       publicPath: false,
-      assets: false,
+      assets: true,
       chunks: false,
       modules: true,
       source: false,
@@ -140,6 +140,7 @@ export default class ServiceWorkerPlugin {
       }
       issuerAssets[module.issuerName].push(...module.assets);
     });
+
 
     if (!asset) {
       compilation.errors.push(
@@ -181,6 +182,7 @@ export default class ServiceWorkerPlugin {
     const serviceWorkerOption = {
       assets,
       issuerAssets,
+      chunkAssets: jsonStats.assetsByChunkName,
     };
 
     const templatePromise = this.options.template(serviceWorkerOption);
