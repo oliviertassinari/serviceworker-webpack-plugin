@@ -62,6 +62,12 @@ E.g. In our example this object look like:
   assets: [
     './main.256334452761ef349e91.js',
   ],
+  issuerAssets: {
+    './src/header.js': [
+      './images/logo-cb999b.png',
+      './images/header-bg-3ca906.jpg'
+    ],
+  },
 }
 ```
 
