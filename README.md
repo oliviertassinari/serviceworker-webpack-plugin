@@ -68,6 +68,11 @@ E.g. In our example this object look like:
       './images/header-bg-3ca906.jpg'
     ],
   },
+  chunkAssets: {
+    'main': [
+      './main.256334452761ef349e91.js',
+    ],
+  },
 }
 ```
 
