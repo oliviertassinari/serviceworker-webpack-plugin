@@ -35,8 +35,7 @@ describe('ServiceWorkerPlugin', () => {
       return serviceWorkerPlugin
         .handleEmit(compilation, {
           options: {},
-        }, () => {})
-        .then(() => {
+        }, () => {
           assert.strictEqual(compilation.assets[filename].source(), trim(`
 var serviceWorkerOption = {
   "assets": [
@@ -74,8 +73,7 @@ var serviceWorkerOption = {
         return serviceWorkerPlugin
           .handleEmit(compilation, {
             options: {},
-          }, () => {})
-          .then(() => {
+          }, () => {
             assert.strictEqual(compilation.assets[filename].source(), trim(`
 var serviceWorkerOption = {
   "bar": "foo",

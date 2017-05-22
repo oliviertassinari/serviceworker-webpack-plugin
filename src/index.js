@@ -127,10 +127,10 @@ export default class ServiceWorkerPlugin {
 
     if (!asset) {
       compilation.errors.push(
-        new Error('ServiceWorkerPlugin: ServiceWorker entry is not found in output assets'),
+        new Error('ServiceWorkerPlugin: the `entry` option is incorrect.'),
       );
-
-      return Promise.reject();
+      callback();
+      return;
     }
 
     const jsonStats = compilation.getStats().toJson({
@@ -180,7 +180,7 @@ export default class ServiceWorkerPlugin {
 
     const templatePromise = this.options.template(serviceWorkerOption);
 
-    return templatePromise.then((template) => {
+    templatePromise.then((template) => {
       const serviceWorkerOptionInline = JSON.stringify(serviceWorkerOption, null, minify ? 0 : 2);
 
       const source = `
