@@ -1,6 +1,6 @@
 {
   "name": "serviceworker-webpack-plugin",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Simplifies creation of a service worker to serve your webpack bundles",
   "main": "lib/index.js",
   "files": [
