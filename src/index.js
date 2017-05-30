@@ -184,7 +184,7 @@ export default class ServiceWorkerPlugin {
       const serviceWorkerOptionInline = JSON.stringify(serviceWorkerOption, null, minify ? 0 : 2);
 
       const source = `
-        var serviceWorkerOption = ${serviceWorkerOptionInline};
+        self.serviceWorkerOption = ${serviceWorkerOptionInline};
         ${template}
         ${asset.source()}
       `.trim();
