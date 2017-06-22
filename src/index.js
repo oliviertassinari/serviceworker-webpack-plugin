@@ -45,8 +45,6 @@ export default class ServiceWorkerPlugin {
         assets: serviceWorkerOption.assets,
       }),
     }, options);
-
-    this.options.filename = this.options.filename.replace(/^\//, '');
   }
 
   apply(compiler) {
