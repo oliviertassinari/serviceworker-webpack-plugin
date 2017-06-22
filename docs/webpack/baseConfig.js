@@ -39,10 +39,6 @@ export default {
       },
     ],
   },
-  performance: {
-    maxAssetSize: 4e6,
-    maxEntrypointSize: 6e6,
-  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, '../src/index.html'),
