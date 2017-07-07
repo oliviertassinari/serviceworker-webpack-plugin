@@ -50,6 +50,13 @@ export default class ServiceWorkerPlugin {
   apply(compiler) {
     const runtimePath = path.resolve(__dirname, './runtime.js');
 
+    // Convert absolute filename into relative so that webpack can
+    // generate it at correct location
+    const filename = this.options.filename;
+    if (path.resolve(filename) === path.normalize(filename)) {
+      this.options.filename = path.relative(compiler.options.output.path, filename);
+    }
+
     compiler.plugin('normal-module-factory', (nmf) => {
       nmf.plugin('after-resolve', (result, callback) => {
         // Hijack the original module
