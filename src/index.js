@@ -32,6 +32,7 @@ const COMPILER_NAME = 'serviceworker-plugin';
 export default class ServiceWorkerPlugin {
   options = [];
   warnings = [];
+  computedFilename = '';
 
   constructor(options) {
     this.options = Object.assign({
@@ -55,7 +56,7 @@ export default class ServiceWorkerPlugin {
         // Hijack the original module
         if (result.resource === runtimePath) {
           const data = {
-            scriptURL: this.options.publicPath + this.options.filename,
+            scriptURL: this.options.publicPath + this.getFileName(),
           };
 
           result.loaders.push(
@@ -109,11 +110,22 @@ export default class ServiceWorkerPlugin {
 
     // Compile and return a promise.
     return new Promise((resolve, reject) => {
-      childCompiler.runAsChild((err) => {
+      childCompiler.runAsChild((err, entries, childCompilation) => {
         if (err) {
           reject(err);
           return;
         }
+
+        // Replace [hash] placeholders in filename
+        const filename = compilation.mainTemplate.applyPluginsWaterfall(
+          'asset-path',
+          this.options.filename,
+          {
+            hash: childCompilation.hash,
+            chunk: entries[0],
+          },
+        );
+        this.computedFilename = filename || this.options.filename;
 
         resolve();
       });
@@ -121,7 +133,7 @@ export default class ServiceWorkerPlugin {
   }
 
   handleEmit(compilation, compiler, callback) {
-    const asset = compilation.assets[this.options.filename];
+    const asset = compilation.assets[this.getFileName()];
 
     if (!asset) {
       compilation.errors.push(
@@ -142,7 +154,7 @@ export default class ServiceWorkerPlugin {
       timings: false,
     });
 
-    delete compilation.assets[this.options.filename];
+    delete compilation.assets[this.getFileName()];
 
     let assets = Object.keys(compilation.assets);
     const excludes = this.options.excludes;
@@ -187,12 +199,16 @@ export default class ServiceWorkerPlugin {
         ${asset.source()}
       `.trim();
 
-      compilation.assets[this.options.filename] = {
+      compilation.assets[this.getFileName()] = {
         source: () => source,
         size: () => Buffer.byteLength(source, 'utf8'),
       };
 
       callback();
     });
+  }
+
+  getFileName() {
+    return this.computedFilename || this.options.filename;
   }
 }
