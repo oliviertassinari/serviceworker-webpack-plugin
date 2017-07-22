@@ -1,27 +1,30 @@
 // @flow weak
 
-import webpack from 'webpack';
-import baseConfig from './baseConfig';
+import webpack from 'webpack'
+import baseConfig from './baseConfig'
 
 export default {
   ...baseConfig,
   module: {
     rules: [
-      ...baseConfig.module.rules.map((rule) => {
+      ...baseConfig.module.rules.map(rule => {
         if (rule.use === 'babel-loader') {
           return {
             ...rule,
             options: {
               presets: [
-                ['es2015', {
-                  modules: false,
-                }],
+                [
+                  'es2015',
+                  {
+                    modules: false,
+                  },
+                ],
               ],
             },
-          };
+          }
         }
 
-        return rule;
+        return rule
       }),
     ],
   },
@@ -42,4 +45,4 @@ export default {
       },
     }),
   ],
-};
+}

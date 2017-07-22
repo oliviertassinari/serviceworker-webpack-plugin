@@ -1,13 +1,11 @@
 // @flow weak
 
-import path from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ServiceWorkerWebpackPlugin from '../../src/index';
+import path from 'path'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import ServiceWorkerWebpackPlugin from '../../src/index'
 
 export default {
-  entry: [
-    './docs/src/app.js',
-  ],
+  entry: ['./docs/src/app.js'],
   output: {
     pathinfo: false,
     path: path.join(__dirname, '../dist'), // No used by webpack dev server
@@ -30,12 +28,7 @@ export default {
       },
       {
         test: /\.scss$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'postcss-loader',
-          'sass-loader',
-        ],
+        use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
       },
     ],
   },
@@ -49,11 +42,7 @@ export default {
     }),
     new ServiceWorkerWebpackPlugin({
       entry: path.join(__dirname, '../src/sw.js'),
-      excludes: [
-        '**/.*',
-        '**/*.map',
-        '*.html',
-      ],
+      excludes: ['**/.*', '**/*.map', '*.html'],
     }),
   ],
-};
+}

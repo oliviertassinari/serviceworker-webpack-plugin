@@ -1,3 +1,3 @@
 // @flow weak
 
-module.exports = {};
+module.exports = {}

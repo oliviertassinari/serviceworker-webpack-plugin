@@ -1,3 +1,3 @@
 // @flow weak
 
-export default '';
+export default ''
