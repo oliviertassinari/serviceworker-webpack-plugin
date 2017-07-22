@@ -3,23 +3,22 @@
 function applyUpdate() {
   return new Promise((resolve, reject) => {
     if (navigator.serviceWorker) {
-      navigator.serviceWorker.getRegistration()
-        .then((registration) => {
-          if (!registration || !registration.waiting) {
-            reject();
-            return;
-          }
+      navigator.serviceWorker.getRegistration().then(registration => {
+        if (!registration || !registration.waiting) {
+          reject()
+          return
+        }
 
-          registration.waiting.postMessage({
-            action: 'skipWaiting',
-          });
+        registration.waiting.postMessage({
+          action: 'skipWaiting',
+        })
 
-          resolve();
-        });
+        resolve()
+      })
     } else {
-      reject();
+      reject()
     }
-  });
+  })
 }
 
-export default applyUpdate;
+export default applyUpdate
