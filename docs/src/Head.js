@@ -1,13 +1,9 @@
 // @flow weak
 
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
-const Head = (props) => {
-  const {
-    children,
-    description,
-    name,
-  } = props;
+const Head = props => {
+  const { children, description, name } = props
 
   return (
     <section className="page-header">
@@ -19,13 +15,13 @@ const Head = (props) => {
       </h2>
       {children}
     </section>
-  );
-};
+  )
+}
 
 Head.propTypes = {
   children: PropTypes.node.isRequired,
   description: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-};
+}
 
-export default Head;
+export default Head
