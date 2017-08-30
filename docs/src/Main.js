@@ -75,9 +75,7 @@ class Main extends Component {
           </a>
         </Head>
         <Body>
-          <h3>
-            {'Logs'}
-          </h3>
+          <h3>{'Logs'}</h3>
           <ul>
             {this.state.logs.map((log, index) => {
               let message
@@ -90,11 +88,7 @@ class Main extends Component {
 
                 case 'onUpdateReady':
                   message = 'a new serviceworker update is ready'
-                  more = (
-                    <button onClick={this.handleClickReload}>
-                      {'Reload'}
-                    </button>
-                  )
+                  more = <button onClick={this.handleClickReload}>{'Reload'}</button>
                   break
 
                 case 'onUpdating':
