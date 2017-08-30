@@ -11,11 +11,7 @@ const styles = {
 const Body = props => {
   const { children } = props
 
-  return (
-    <div style={styles.root}>
-      {children}
-    </div>
-  )
+  return <div style={styles.root}>{children}</div>
 }
 
 Body.propTypes = {
