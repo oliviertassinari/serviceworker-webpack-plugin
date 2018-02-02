@@ -101,56 +101,61 @@ self.addEventListener('fetch', event => {
     return
   }
 
-  const resource = global.caches.match(request).then(response => {
-    if (response) {
-      if (DEBUG) {
-        console.log(`[SW] fetch URL ${requestUrl.href} from cache`)
-      }
-
-      return response
-    }
-
-    // Load and cache known assets.
-    return fetch(request)
-      .then(responseNetwork => {
-        if (!responseNetwork || !responseNetwork.ok) {
+  const resource = global.caches
+    .open(CACHE_NAME)
+    .then(cache => {
+      return cache.match(request).then(response => {
+        if (response) {
           if (DEBUG) {
-            console.log(
-              `[SW] URL [${requestUrl.toString()}] wrong responseNetwork: ${responseNetwork.status} ${responseNetwork.type}`
-            )
+            console.log(`[SW] fetch URL ${requestUrl.href} from cache`)
           }
 
-          return responseNetwork
+          return response
         }
 
-        if (DEBUG) {
-          console.log(`[SW] URL ${requestUrl.href} fetched`)
-        }
+        // Load and cache known assets.
+        return fetch(request)
+          .then(responseNetwork => {
+            if (!responseNetwork || !responseNetwork.ok) {
+              if (DEBUG) {
+                console.log(
+                  `[SW] URL [${requestUrl.toString()}] wrong responseNetwork: ${responseNetwork.status} ${responseNetwork.type}`
+                )
+              }
 
-        const responseCache = responseNetwork.clone()
-
-        global.caches
-          .open(CACHE_NAME)
-          .then(cache => {
-            return cache.put(request, responseCache)
-          })
-          .then(() => {
-            if (DEBUG) {
-              console.log(`[SW] Cache asset: ${requestUrl.href}`)
+              return responseNetwork
             }
+
+            if (DEBUG) {
+              console.log(`[SW] URL ${requestUrl.href} fetched`)
+            }
+
+            const responseCache = responseNetwork.clone()
+
+            global.caches
+              .open(CACHE_NAME)
+              .then(cache => {
+                return cache.put(request, responseCache)
+              })
+              .then(() => {
+                if (DEBUG) {
+                  console.log(`[SW] Cache asset: ${requestUrl.href}`)
+                }
+              })
+
+            return responseNetwork
           })
+          .catch(() => {
+            // User is landing on our page.
+            if (event.request.mode === 'navigate') {
+              return global.caches.match('./')
+            }
 
-        return responseNetwork
+            return null
+          })
       })
-      .catch(() => {
-        // User is landing on our page.
-        if (event.request.mode === 'navigate') {
-          return global.caches.match('./')
-        }
+    });
 
-        return null
-      })
-  })
 
   event.respondWith(resource)
 })
