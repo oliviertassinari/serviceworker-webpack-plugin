@@ -56,7 +56,7 @@ export default class ServiceWorkerPlugin {
   apply(compiler) {
     const runtimePath = path.resolve(__dirname, './runtime.js')
 
-    compiler.hooks.normalModuleFactory.tap(nmf => {
+    compiler.hooks.normalModuleFactory.tap('sw-plugin-nmf', nmf => {
       nmf.hooks.afterResolve.tapAsync('sw-plugin-after-resolve', (result, callback) => {
         // Hijack the original module
         if (result.resource === runtimePath) {
