@@ -42,7 +42,7 @@ export default class ServiceWorkerPlugin {
         transformOptions: serviceWorkerOption => ({
           assets: serviceWorkerOption.assets,
         }),
-        minimize: process.env.NODE_ENV === 'production'
+        minimize: process.env.NODE_ENV === 'production',
       },
       options
     )
@@ -176,7 +176,11 @@ export default class ServiceWorkerPlugin {
     const templatePromise = this.options.template(serviceWorkerOption)
 
     templatePromise.then(template => {
-      const serviceWorkerOptionInline = JSON.stringify(serviceWorkerOption, null, this.options.minimize ? 0 : 2)
+      const serviceWorkerOptionInline = JSON.stringify(
+        serviceWorkerOption,
+        null,
+        this.options.minimize ? 0 : 2
+      )
 
       const source = `
         var serviceWorkerOption = ${serviceWorkerOptionInline};
