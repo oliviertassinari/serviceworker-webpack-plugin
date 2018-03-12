@@ -92,6 +92,8 @@ It's taking a `serviceWorkerOption` argument and must return a promise.
 - `transformOptions`, *function*:
 This callback function receives a raw `serviceWorkerOption` argument.
 The `jsonStats` key contains all the webpack build information.
+- `minimize`:
+Whether to minimize output. Defaults to `process.env.NODE_ENV === 'production'`
 
 ### `runtime(options)`
 
