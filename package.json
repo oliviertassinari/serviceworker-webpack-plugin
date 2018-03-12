@@ -63,7 +63,7 @@
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.3.0",
     "extract-text-webpack-plugin": "^3.0.2",
-    "flow-bin": "^0.67.1",
+    "flow-bin": "^0.53.1",
     "force-case-sensitivity-webpack-plugin": "^0.2.1",
     "html-webpack-plugin": "^2.30.1",
     "loglevel": "^1.4.1",
