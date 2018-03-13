@@ -116,7 +116,9 @@ self.addEventListener('fetch', event => {
         if (!responseNetwork || !responseNetwork.ok) {
           if (DEBUG) {
             console.log(
-              `[SW] URL [${requestUrl.toString()}] wrong responseNetwork: ${responseNetwork.status} ${responseNetwork.type}`
+              `[SW] URL [${requestUrl.toString()}] wrong responseNetwork: ${
+                responseNetwork.status
+              } ${responseNetwork.type}`
             )
           }
 
