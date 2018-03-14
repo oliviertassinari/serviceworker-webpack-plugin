@@ -55,7 +55,7 @@ export default class ServiceWorkerPlugin {
         // Hijack the original module
         if (result.resource === runtimePath) {
           const data = {
-            scriptURL: (this.options.publicPath + this.options.filename).replace(/^\/{2,}/, '/'),
+            scriptURL: path.join(this.options.publicPath, this.options.filename),
           };
 
           result.loaders.push(
