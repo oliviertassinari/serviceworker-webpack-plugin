@@ -1,10 +1,10 @@
 // @flow weak
 
-import webpack from 'webpack';
-import ForceCaseSensitivityPlugin from 'force-case-sensitivity-webpack-plugin';
-import baseConfig from './baseConfig';
+import webpack from 'webpack'
+import ForceCaseSensitivityPlugin from 'force-case-sensitivity-webpack-plugin'
+import baseConfig from './baseConfig'
 
-const PORT = 8002;
+const PORT = 8002
 
 export default {
   ...baseConfig,
@@ -33,26 +33,27 @@ export default {
   },
   module: {
     rules: [
-      ...baseConfig.module.rules.map((rule) => {
+      ...baseConfig.module.rules.map(rule => {
         if (rule.loader === 'babel-loader') {
           return {
             ...rule,
             options: {
               presets: [
-                ['es2015', {
-                  modules: false,
-                }],
+                [
+                  'es2015',
+                  {
+                    modules: false,
+                  },
+                ],
                 'react',
                 'stage-1',
               ],
-              plugins: [
-                'react-hot-loader/babel',
-              ],
+              plugins: ['react-hot-loader/babel'],
             },
-          };
+          }
         }
 
-        return rule;
+        return rule
       }),
     ],
   },
@@ -71,4 +72,4 @@ export default {
       },
     }),
   ],
-};
+}

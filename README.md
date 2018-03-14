@@ -85,6 +85,7 @@ Exclude matched assets from being added to the `serviceWorkerOption.assets` vari
 Include matched assets added to the `serviceWorkerOption.assets` variable. (Whitelist)
  - `publicPath`, *string*, default `'/'`:
 Specifies the public URL address of the output files when referenced in a browser.
+We use this value to load the service worker over the network.
  - `template`, *function*, default noop:
 This callback function can be used to inject statically generated service worker.
 It's taking a `serviceWorkerOption` argument and must return a promise.

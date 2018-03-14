@@ -1,49 +1,49 @@
 // @flow weak
 
 function registerEvents(registration, callbacks) {
-  const sendEvent = (event) => {
+  const sendEvent = event => {
     if (typeof callbacks[event] === 'function') {
-      callbacks[event]();
+      callbacks[event]()
     }
-  };
+  }
 
-  const handleUpdating = (registration2) => {
-    const serviceworker = registration2.installing || registration2.waiting;
-    let ignoreWaiting;
+  const handleUpdating = registration2 => {
+    const serviceworker = registration2.installing || registration2.waiting
+    let ignoreWaiting
 
     // No SW or already handled
     if (!serviceworker || serviceworker.onstatechange) {
-      return;
+      return
     }
 
     if (registration2.waiting) {
-      ignoreWaiting = true;
+      ignoreWaiting = true
     }
 
     function onUpdateStateChange() {
       switch (serviceworker.state) {
         case 'redundant':
-          sendEvent('onUpdateFailed');
-          serviceworker.onstatechange = null;
-          break;
+          sendEvent('onUpdateFailed')
+          serviceworker.onstatechange = null
+          break
 
         case 'installing':
-          sendEvent('onUpdating');
-          break;
+          sendEvent('onUpdating')
+          break
 
         case 'installed':
           if (!ignoreWaiting) {
-            sendEvent('onUpdateReady');
+            sendEvent('onUpdateReady')
           }
-          break;
+          break
 
         case 'activated':
-          sendEvent('onUpdated');
-          serviceworker.onstatechange = null;
-          break;
+          sendEvent('onUpdated')
+          serviceworker.onstatechange = null
+          break
 
         default:
-          break;
+          break
       }
     }
 
@@ -51,42 +51,44 @@ function registerEvents(registration, callbacks) {
       switch (serviceworker.state) {
         case 'redundant':
           // Failed to install, ignore
-          serviceworker.onstatechange = null;
-          break;
+          serviceworker.onstatechange = null
+          break
 
         case 'activated':
-          sendEvent('onInstalled');
-          serviceworker.onstatechange = null;
-          break;
+          sendEvent('onInstalled')
+          serviceworker.onstatechange = null
+          break
 
         default:
-          break;
+          break
       }
     }
 
-    let stateChangeHandler;
+    let stateChangeHandler
 
     // Already has a SW
     if (registration2.active) {
-      onUpdateStateChange();
-      stateChangeHandler = onUpdateStateChange;
+      onUpdateStateChange()
+      stateChangeHandler = onUpdateStateChange
     } else {
-      onInstallStateChange();
-      stateChangeHandler = onInstallStateChange;
+      onInstallStateChange()
+      stateChangeHandler = onInstallStateChange
     }
 
-    serviceworker.onstatechange = stateChangeHandler;
-  };
+    serviceworker.onstatechange = stateChangeHandler
+  }
 
-  registration.then((registration2) => {
-    handleUpdating(registration2);
-    registration2.onupdatefound = () => {
-      handleUpdating(registration2);
-    };
-  }).catch((err) => {
-    sendEvent('onError');
-    return Promise.reject(err);
-  });
+  registration
+    .then(registration2 => {
+      handleUpdating(registration2)
+      registration2.onupdatefound = () => {
+        handleUpdating(registration2)
+      }
+    })
+    .catch(err => {
+      sendEvent('onError')
+      return Promise.reject(err)
+    })
 }
 
-export default registerEvents;
+export default registerEvents
