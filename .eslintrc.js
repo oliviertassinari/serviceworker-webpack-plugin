@@ -5,7 +5,7 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: ['airbnb', 'plugin:import/recommended'],
+  extends: ['prettier', 'plugin:import/recommended'],
   parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 7,

@@ -1,6 +1,6 @@
 [ignore]
-
 .*/node_modules/fbjs/*
+.*/node_modules/webpack-cli/*
 
 [libs]
 flow/interfaces
