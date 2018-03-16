@@ -67,7 +67,7 @@ E.g. In our example this object looks like:
 
 ## Simple example
 
-You can have a look at the [`/docs`](https://github.com/oliviertassinari/serviceworker-webpack-plugin/tree/master/docs)
+You can have a look at the [`/docs`](https://github.com/oliviertassinari/serviceworker-webpack-plugin/tree/master/docs/src)
 folder if you need a full working example.
 
 ## API

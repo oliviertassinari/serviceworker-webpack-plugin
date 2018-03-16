@@ -1,0 +1,37 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:latest",
+    "tslint-config-prettier"
+  ],
+  "jsRules": {
+    "trailing-comma": [
+      true
+    ]
+  },
+  "rules": {
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "indent": [
+      true
+    ],
+    "interface-name": [
+      false
+    ],
+    "arrow-parens": false,
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "no-var-requires": false,
+    "max-line-length": [
+      100
+    ],
+    "max-file-line-count": [
+      250
+    ],
+    "import-spacing": false,
+    "no-submodule-imports": false
+  },
+  "rulesDirectory": []
+}
