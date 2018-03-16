@@ -1,7 +1,11 @@
 // @flow weak
 /* eslint-env mocha */
 
-import { assert } from 'chai'
+import webpack from 'webpack'
+import path from 'path'
+import fs from 'fs'
+import rimraf from 'rimraf'
+import { assert, expect } from 'chai'
 import ServiceWorkerPlugin from './index'
 
 function trim(str) {
@@ -9,8 +13,29 @@ function trim(str) {
 }
 
 const filename = 'sw.js'
+const webpackOutputPath = path.resolve('./tmp-build')
+const makeWebpackConfig = options => ({
+  entry: path.join(__dirname, '../test/test-build-entry'),
+  plugins: [
+    new ServiceWorkerPlugin({
+      entry: path.join(__dirname, '../test/test-build-sw'),
+      ...options,
+    }),
+  ],
+  resolve: {
+    alias: {
+      'serviceworker-webpack-plugin/lib/runtime': path.join(__dirname, 'runtime.js'),
+    },
+  },
+  output: {
+    path: webpackOutputPath,
+  },
+})
 
 describe('ServiceWorkerPlugin', () => {
+  beforeEach(done => {
+    return rimraf(webpackOutputPath, done)
+  })
   describe('options: filename', () => {
     it('should throw if trying to hash the filename', () => {
       assert.throws(() => {
@@ -19,6 +44,24 @@ describe('ServiceWorkerPlugin', () => {
           filename: 'sw-[hash:7].js',
         })
       }, /The name of the/)
+    })
+    it('should strip double slashes', done => {
+      const options = makeWebpackConfig({
+        filename: '//sw.js',
+      })
+      return webpack(options, (err, stats) => {
+        expect(err).to.equal(null)
+        const { assetsByChunkName, errors, warnings } = stats.toJson()
+        expect(errors).to.have.length(0)
+        expect(warnings).to.have.length(0)
+
+        const mainFile = fs.readFileSync(
+          path.join(webpackOutputPath, assetsByChunkName.main),
+          'utf8'
+        )
+        expect(mainFile).to.include('var serviceWorkerOption = {"scriptURL":"/sw.js"}')
+        done()
+      })
     })
   })
 
