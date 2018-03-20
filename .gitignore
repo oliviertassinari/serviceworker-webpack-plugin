@@ -2,3 +2,5 @@
 /node_modules
 /lib
 /docs/dist
+.idea/
+tmp-build/

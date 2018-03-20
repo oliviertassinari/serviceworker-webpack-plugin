@@ -61,7 +61,7 @@ export default class ServiceWorkerPlugin {
         // Hijack the original module
         if (result.resource === runtimePath) {
           const data = {
-            scriptURL: this.options.publicPath + this.options.filename,
+            scriptURL: path.join(this.options.publicPath, this.options.filename),
           }
 
           result.loaders.push(`${path.join(__dirname, 'runtimeLoader.js')}?${JSON.stringify(data)}`)
