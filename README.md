@@ -78,7 +78,7 @@ folder if you need a full working example.
  - `entry`, **required**, *string*:
 Path to the actual service worker implementation.
  - `filename`, *string*, default `'sw.js'`:
-Relative (from the webpack's config `output.path`) output path for emitted script.
+Absolute or relative (from the webpack's config `output.path`) output path for emitted script.
  - `excludes`, *array*, default `['**/.*', '**/*.map']`:
 Exclude matched assets from being added to the `serviceWorkerOption.assets` variable. (Blacklist)
  - `includes`, *array*, default `['**/*']`:
