@@ -16,6 +16,8 @@ const filename = 'sw.js'
 const webpackOutputPath = path.resolve('./tmp-build')
 const makeWebpackConfig = options => ({
   entry: path.join(__dirname, '../test/test-build-entry'),
+  mode: 'development',
+  devtool: false,
   plugins: [
     new ServiceWorkerPlugin({
       entry: path.join(__dirname, '../test/test-build-sw'),
