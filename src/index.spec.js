@@ -67,6 +67,27 @@ describe('ServiceWorkerPlugin', () => {
     })
   })
 
+  it('should correctly generate a service worker', () => {
+    const options = makeWebpackConfig({
+      filename: '//sw.js',
+    })
+    return webpack(options, (err, stats) => {
+      expect(err).to.equal(null)
+      const { assetsByChunkName, errors, warnings } = stats.toJson()
+      expect(errors).to.have.length(0)
+      expect(warnings).to.have.length(0)
+
+      const swFile = fs
+        .readFileSync(path.join(webpackOutputPath, 'sw.js'), 'utf8')
+        .replace(/\s+/g, ' ')
+
+      // sw.js should reference main.js
+      expect(swFile).to.include('var serviceWorkerOption = { "assets": [ "/main.js" ] }')
+      // sw.js should include the webpack require code
+      expect(swFile).to.include('function __webpack_require__(moduleId)')
+    })
+  })
+
   describe('options: includes', () => {
     it('should allow to have a white list parameter', () => {
       const serviceWorkerPlugin = new ServiceWorkerPlugin({
