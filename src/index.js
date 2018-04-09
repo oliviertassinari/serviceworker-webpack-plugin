@@ -95,8 +95,9 @@ export default class ServiceWorkerPlugin {
     const childCompiler = compilation.createChildCompiler(COMPILER_NAME, {
       filename: this.options.filename,
     })
-    childCompiler.context = compiler.context
-    childCompiler.apply(new SingleEntryPlugin(compiler.context, this.options.entry))
+
+    const childEntryCompiler = new SingleEntryPlugin(compiler.context, this.options.entry)
+    childEntryCompiler.apply(childCompiler)
 
     // Fix for "Uncaught TypeError: __webpack_require__(...) is not a function"
     // Hot module replacement requires that every child compiler has its own
