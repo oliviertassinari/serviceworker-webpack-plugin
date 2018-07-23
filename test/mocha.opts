@@ -2,4 +2,3 @@
 --reporter dot
 --recursive
 --throw-deprecation
-src/{,**/}*.spec.js

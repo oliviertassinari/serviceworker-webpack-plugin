@@ -10,16 +10,18 @@
   "scripts": {
     "clean": "rimraf ./docs/dist ./lib",
     "lint": "eslint . --fix && echo \"eslint: no lint errors\"",
-    "test": "npm run lint && npm run test:unit && npm run flow",
-    "test:unit": "NODE_ENV=test mocha",
-    "test:watch": "NODE_ENV=test mocha -w",
+    "test": "npm run lint && npm run test:unit && npm run test:3 && npm run flow",
+    "test:unit": "NODE_ENV=test mocha src/{,**/}*.spec.js",
+    "test:watch": "NODE_ENV=test mocha src/{,**/}*.spec.js -w",
+    "test:3": "NODE_ENV=test mocha test/webpack3/index.js",
     "prebuild": "npm run clean",
     "prettier": "find . -name \"*.js\" | grep -v -f .eslintignore | xargs prettier --write --no-semi --single-quote --trailing-comma es5 --print-width 100",
     "flow": "flow",
     "build": "babel src --out-dir lib",
     "version": "yarn build && pkgfiles",
     "docs:development": "babel-node ./node_modules/.bin/webpack-dev-server --mode=development --config=docs/webpack/developmentConfig.js --progress",
-    "docs:production": "npm run clean && NODE_ENV=docs-browser-production babel-node ./node_modules/.bin/webpack --mode=production --config=docs/webpack/productionConfig.js --progress"
+    "docs:production": "npm run clean && NODE_ENV=docs-browser-production babel-node ./node_modules/.bin/webpack --mode=production --config=docs/webpack/productionConfig.js --progress",
+    "postinstall": "(cd ./test/webpack3; yarn install)"
   },
   "repository": {
     "type": "git",

@@ -54,6 +54,13 @@ export default class ServiceWorkerPlugin {
   }
 
   apply(compiler) {
+    // compiler.hooks was introduced in webpack4, older versions are not supported
+    if (compiler.hooks === undefined) {
+      throw new Error(
+        'serviceworker-webpack-plugin requires webpack >= 4. Use serviceworker-webpack-plugin@0 on older versions of webpack'
+      )
+    }
+
     const runtimePath = path.resolve(__dirname, './runtime.js')
 
     compiler.hooks.normalModuleFactory.tap('sw-plugin-nmf', nmf => {
