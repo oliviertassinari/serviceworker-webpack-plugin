@@ -1,7 +1,6 @@
 // @flow weak
 
 import path from 'path'
-import webpack from 'webpack'
 import SingleEntryPlugin from 'webpack/lib/SingleEntryPlugin'
 import minimatch from 'minimatch'
 
@@ -43,6 +42,7 @@ export default class ServiceWorkerPlugin {
         transformOptions: serviceWorkerOption => ({
           assets: serviceWorkerOption.assets,
         }),
+        minimize: process.env.NODE_ENV === 'production',
       },
       options
     )
@@ -54,10 +54,17 @@ export default class ServiceWorkerPlugin {
   }
 
   apply(compiler) {
+    // compiler.hooks was introduced in webpack4, older versions are not supported
+    if (compiler.hooks === undefined) {
+      throw new Error(
+        'serviceworker-webpack-plugin requires webpack >= 4. Use serviceworker-webpack-plugin@0 on older versions of webpack'
+      )
+    }
+
     const runtimePath = path.resolve(__dirname, './runtime.js')
 
-    compiler.plugin('normal-module-factory', nmf => {
-      nmf.plugin('after-resolve', (result, callback) => {
+    compiler.hooks.normalModuleFactory.tap('sw-plugin-nmf', nmf => {
+      nmf.hooks.afterResolve.tapAsync('sw-plugin-after-resolve', (result, callback) => {
         // Hijack the original module
         if (result.resource === runtimePath) {
           const data = {
@@ -71,7 +78,7 @@ export default class ServiceWorkerPlugin {
       })
     })
 
-    compiler.plugin('make', (compilation, callback) => {
+    compiler.hooks.make.tapAsync('sw-plugin-make', (compilation, callback) => {
       if (this.warnings.length) {
         const array = []
         array.push.apply(compilation.warnings, this.warnings)
@@ -86,7 +93,7 @@ export default class ServiceWorkerPlugin {
         })
     })
 
-    compiler.plugin('emit', (compilation, callback) => {
+    compiler.hooks.emit.tapAsync('sw-plugin-emit', (compilation, callback) => {
       this.handleEmit(compilation, compiler, callback)
     })
   }
@@ -95,13 +102,14 @@ export default class ServiceWorkerPlugin {
     const childCompiler = compilation.createChildCompiler(COMPILER_NAME, {
       filename: this.options.filename,
     })
-    childCompiler.context = compiler.context
-    childCompiler.apply(new SingleEntryPlugin(compiler.context, this.options.entry))
+
+    const childEntryCompiler = new SingleEntryPlugin(compiler.context, this.options.entry)
+    childEntryCompiler.apply(childCompiler)
 
     // Fix for "Uncaught TypeError: __webpack_require__(...) is not a function"
     // Hot module replacement requires that every child compiler has its own
     // cache. @see https://github.com/ampedandwired/html-webpack-plugin/pull/179
-    childCompiler.plugin('compilation', compilation2 => {
+    childCompiler.hooks.compilation.tap('sw-plugin-compilation', compilation2 => {
       if (compilation2.cache) {
         if (!compilation2.cache[COMPILER_NAME]) {
           compilation2.cache[COMPILER_NAME] = {}
@@ -168,10 +176,6 @@ export default class ServiceWorkerPlugin {
 
     assets = validatePaths(assets, this.options)
 
-    const minify = (compiler.options.plugins || []).some(plugin => {
-      return plugin instanceof webpack.optimize.UglifyJsPlugin
-    })
-
     const serviceWorkerOption = this.options.transformOptions({
       assets,
       jsonStats,
@@ -180,7 +184,11 @@ export default class ServiceWorkerPlugin {
     const templatePromise = this.options.template(serviceWorkerOption)
 
     templatePromise.then(template => {
-      const serviceWorkerOptionInline = JSON.stringify(serviceWorkerOption, null, minify ? 0 : 2)
+      const serviceWorkerOptionInline = JSON.stringify(
+        serviceWorkerOption,
+        null,
+        this.options.minimize ? 0 : 2
+      )
 
       const source = `
         var serviceWorkerOption = ${serviceWorkerOptionInline};

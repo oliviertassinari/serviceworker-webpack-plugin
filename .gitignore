@@ -1,5 +1,5 @@
 *.log
-/node_modules
+node_modules
 /lib
 /docs/dist
 .idea/

@@ -6,4 +6,5 @@ import Main from './Main'
 import './normalize.scss'
 import './stylesheet.scss'
 
+// $FlowFixMe
 render(<Main />, document.querySelector('#main'))

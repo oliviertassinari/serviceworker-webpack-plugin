@@ -1,4 +1,4 @@
 --require babel-register
 --reporter dot
 --recursive
-src/{,**/}*.spec.js
+--throw-deprecation

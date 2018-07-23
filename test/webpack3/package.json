@@ -1,0 +1,13 @@
+{
+  "name": "serviceworker-webpack-plugin-webpack3-test",
+  "version": "1.0.0",
+  "description": "Webpack 3 tests for swp",
+  "main": "test.js",
+  "author": "Wouter M. van Vliet <wouter@interpotential.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "mocha": "^5.2.0",
+    "webpack": "3"
+  }
+}

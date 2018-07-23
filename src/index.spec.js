@@ -16,6 +16,8 @@ const filename = 'sw.js'
 const webpackOutputPath = path.resolve('./tmp-build')
 const makeWebpackConfig = options => ({
   entry: path.join(__dirname, '../test/test-build-entry'),
+  mode: 'development',
+  devtool: false,
   plugins: [
     new ServiceWorkerPlugin({
       entry: path.join(__dirname, '../test/test-build-sw'),
@@ -62,6 +64,27 @@ describe('ServiceWorkerPlugin', () => {
         expect(mainFile).to.include('var serviceWorkerOption = {"scriptURL":"/sw.js"}')
         done()
       })
+    })
+  })
+
+  it('should correctly generate a service worker', () => {
+    const options = makeWebpackConfig({
+      filename: '//sw.js',
+    })
+    return webpack(options, (err, stats) => {
+      expect(err).to.equal(null)
+      const { assetsByChunkName, errors, warnings } = stats.toJson()
+      expect(errors).to.have.length(0)
+      expect(warnings).to.have.length(0)
+
+      const swFile = fs
+        .readFileSync(path.join(webpackOutputPath, 'sw.js'), 'utf8')
+        .replace(/\s+/g, ' ')
+
+      // sw.js should reference main.js
+      expect(swFile).to.include('var serviceWorkerOption = { "assets": [ "/main.js" ] }')
+      // sw.js should include the webpack require code
+      expect(swFile).to.include('function __webpack_require__(moduleId)')
     })
   })
 
