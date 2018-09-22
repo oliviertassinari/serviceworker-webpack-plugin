@@ -1,7 +1,7 @@
 import * as fs   from 'fs';
 import * as path from 'path';
 
-module.exports = function defaultExport() {
+module.exports = (): boolean => {
     return true;
 };
 
@@ -10,7 +10,6 @@ module.exports.pitch = function pitch() {
     const templatePath = path.join(__dirname, './runtimeTemplate.js');
 
     this.cacheable();
-
     this.addDependency(templatePath);
 
     fs.readFile(templatePath, 'utf-8', (err: any, template: any) => {
@@ -19,8 +18,7 @@ module.exports.pitch = function pitch() {
             return;
         }
 
-        const source = `\n    var serviceWorkerOption = ${this.query.slice(1)};\n${template}\n`
-        .trim();
+        const source = `\n    var serviceWorkerOption = ${this.query.slice(1)};\n${template}\n`.trim();
 
         callback(null, source);
     });

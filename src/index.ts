@@ -1,18 +1,13 @@
-import * as path      from 'path';
-import * as minimatch from 'minimatch';
-import * as webpack   from 'webpack';
+import * as path    from 'path';
+import * as minimatch    from 'minimatch';
+import * as webpack from 'webpack';
 
-export interface ITransformOptions {
-    assets: string[];
-    jsonStats?: any;
-}
-
-export interface IOptions {
+interface IOptions {
     publicPath: string;
     excludes: string[];
     includes: string[];
-    assets?: string[];
-    entry: string;
+    assets: string[];
+    entry: string | null;
     filename: string;
     minimize: boolean;
 
@@ -21,15 +16,34 @@ export interface IOptions {
     template(options?: ITransformOptions): Promise<string>;
 }
 
-export interface ICompilation extends webpack.compilation.Compilation {
+export interface IServiceWorkerPluginOptions {
+    publicPath?: string;
+    excludes?: string[];
+    includes?: string[];
+    assets?: string[];
+    entry?: string | null;
+    filename?: string;
+    minimize?: boolean;
+
+    transformOptions?(options: ITransformOptions): ITransformOptions;
+
+    template?(options?: ITransformOptions): Promise<string>;
+}
+
+interface ITransformOptions {
+    assets: string[];
+    jsonStats?: any;
+}
+
+interface ICompilation extends webpack.compilation.Compilation {
     createChildCompiler?: any;
 }
 
-export interface ICompiler extends webpack.Compiler {
+interface ICompiler extends webpack.Compiler {
     context: any;
 }
 
-export interface IAsset extends webpack.compilation.Asset {
+interface IAsset extends webpack.compilation.Asset {
     source: any;
 }
 
@@ -55,23 +69,24 @@ const validatePaths = (assets: string[], options: IOptions) => {
 };
 const COMPILER_NAME = 'serviceworker-plugin';
 
-export default class ServiceWorkerPlugin {
-    private readonly options: IOptions;
+export class ServiceWorkerPlugin {
+    private options: IOptions = {
+        publicPath:       '/',
+        excludes:         ['**/.*', '**/*.map'],
+        includes:         ['**/*'],
+        assets:           [],
+        entry:            null,
+        filename:         'sw.js',
+        template:         () => Promise.resolve(''),
+        transformOptions: (serviceWorkerOption: ITransformOptions) => ({
+            assets: serviceWorkerOption.assets,
+        }),
+        minimize:         process.env.NODE_ENV === 'production',
+    };
     private warnings: string[] = [];
 
-    constructor(options: IOptions) {
-        this.options = Object.assign({
-                                         publicPath:       '/',
-                                         excludes:         ['**/.*', '**/*.map'],
-                                         includes:         ['**/*'],
-                                         entry:            null,
-                                         filename:         'sw.js',
-                                         template:         () => Promise.resolve(''),
-                                         transformOptions: (serviceWorkerOption: ITransformOptions) => ({
-                                             assets: serviceWorkerOption.assets,
-                                         }),
-                                         minimize:         process.env.NODE_ENV === 'production',
-                                     }, options);
+    constructor(options: IServiceWorkerPluginOptions) {
+        this.options = Object.assign(this.options, options);
 
         if (this.options.filename.match(/\[hash/)) {
             throw new Error('The name of the service worker needs to be fixed across releases. https://developers.google.com/web/fundamentals/instant-and-offline/service-worker/lifecycle#avoid_changing_the_url_of_your_service_worker_script');

@@ -90,3 +90,4 @@ const registerEvents = (registration: any, callbacks: any) => {
 };
 
 export default registerEvents;
+module.exports = exports.default;

@@ -24,3 +24,4 @@ const applyUpdate = (): Promise<any> => {
 };
 
 export default applyUpdate;
+module.exports = applyUpdate;

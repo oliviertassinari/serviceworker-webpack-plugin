@@ -10,7 +10,8 @@
   "scripts": {
     "clean": "rimraf ./lib",
     "lint": "tslint --fix -c tslint.json './src/**/*.ts'",
-    "test": "NODE_ENV=test jest --coverage",
+    "pretest": "npm run build",
+    "test": "NODE_ENV=test jest --silent --coverage",
     "prebuild": "npm run clean",
     "build": "npm run build:types && npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
@@ -21,6 +22,38 @@
     "release:major": "npm run version && changelog -M && git add CHANGELOG.md && git commit -m 'chore: update changelog' && npm version major && git push origin && git push origin --tags",
     "release:minor": "npm run version && changelog -m && git add CHANGELOG.md && git commit -m 'chore: update changelog' && npm version minor && git push origin && git push origin --tags",
     "release:patch": "npm run version && changelog -p && git add CHANGELOG.md && git commit -m 'chore: update changelog' && npm version patch && git push origin && git push origin --tags"
+  },
+  "jest": {
+    "verbose": true,
+    "globals": {
+      "window": true
+    },
+    "rootDir": "./src",
+    "setupFiles": [
+      "../jestsetup.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+    ],
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts)$",
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "coverageDirectory": "../coverage"
   },
   "repository": {
     "type": "git",
@@ -52,8 +85,10 @@
     "@babel/preset-typescript": "7.1.0",
     "@commitlint/cli": "7.1.2",
     "@commitlint/config-conventional": "7.1.2",
+    "@types/jest": "23.3.2",
     "@types/minimatch": "3.0.3",
     "@types/node": "10.10.3",
+    "@types/rimraf": "2.0.2",
     "@types/webpack": "4.4.12",
     "concurrently": "4.0.1",
     "generate-changelog": "1.7.1",

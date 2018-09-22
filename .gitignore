@@ -4,3 +4,4 @@ node_modules
 /example/dist
 .idea/
 tmp-build/
+coverage
