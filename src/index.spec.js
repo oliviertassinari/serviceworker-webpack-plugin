@@ -14,6 +14,12 @@ function trim(str) {
 
 const filename = 'sw.js'
 const webpackOutputPath = path.resolve('./tmp-build')
+const outputOptions = {
+  path: webpackOutputPath,
+  hashFunction: 'md4',
+  hashDigest: 'hex',
+  hashDigestLength: 20,
+}
 const makeWebpackConfig = options => ({
   entry: path.join(__dirname, '../test/test-build-entry'),
   mode: 'development',
@@ -29,10 +35,9 @@ const makeWebpackConfig = options => ({
       'serviceworker-webpack-plugin/lib/runtime': path.join(__dirname, 'runtime.js'),
     },
   },
-  output: {
-    path: webpackOutputPath,
-  },
+  output: outputOptions,
 })
+const fakeOptions = { output: outputOptions }
 
 describe('ServiceWorkerPlugin', () => {
   beforeEach(done => {
@@ -96,6 +101,7 @@ describe('ServiceWorkerPlugin', () => {
       })
 
       const compilation = {
+        options: fakeOptions,
         assets: {
           [filename]: {
             source: () => '',
@@ -140,6 +146,7 @@ var serviceWorkerOption = {
         })
 
         const compilation = {
+          options: fakeOptions,
           assets: {
             [filename]: {
               source: () => '',
@@ -170,7 +177,39 @@ var serviceWorkerOption = {
             )
           }
         )
-      })
+      }),
+        it('should get passed assetsHash', done => {
+          const transformOptions = serviceWorkerOption => {
+            expect(serviceWorkerOption)
+              .to.have.property('assetsHash')
+              .that.is.a('string')
+          }
+
+          const serviceWorkerPlugin = new ServiceWorkerPlugin({
+            filename,
+            transformOptions,
+          })
+
+          const compilation = {
+            options: fakeOptions,
+            assets: {
+              [filename]: {
+                source: () => '',
+              },
+            },
+            getStats: () => ({
+              toJson: () => ({}),
+            }),
+          }
+
+          return serviceWorkerPlugin.handleEmit(
+            compilation,
+            {
+              options: {},
+            },
+            done
+          )
+        })
     })
   })
 })
