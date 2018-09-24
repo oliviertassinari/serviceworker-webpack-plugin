@@ -16,6 +16,7 @@ const filename = 'sw.js'
 const webpackOutputPath = path.resolve('./tmp-build')
 const outputOptions = {
   path: webpackOutputPath,
+  // these are the defaults from https://github.com/webpack/webpack/blob/master/lib/WebpackOptionsDefaulter.js#L164
   hashFunction: 'md4',
   hashDigest: 'hex',
   hashDigestLength: 20,
@@ -182,7 +183,7 @@ var serviceWorkerOption = {
           const transformOptions = serviceWorkerOption => {
             expect(serviceWorkerOption)
               .to.have.property('assetsHash')
-              .that.is.a('string')
+              .that.is.equal('bd90271e0847dcc66adb')
           }
 
           const serviceWorkerPlugin = new ServiceWorkerPlugin({
@@ -196,6 +197,40 @@ var serviceWorkerOption = {
               [filename]: {
                 source: () => '',
               },
+              'bar-v1.js': {},
+            },
+            getStats: () => ({
+              toJson: () => ({}),
+            }),
+          }
+
+          return serviceWorkerPlugin.handleEmit(
+            compilation,
+            {
+              options: {},
+            },
+            done
+          )
+        }),
+        it('should change assetsHash when filename changes', done => {
+          const transformOptions = serviceWorkerOption => {
+            expect(serviceWorkerOption)
+              .to.have.property('assetsHash')
+              .that.is.equal('47633aad38a6adaca6ec')
+          }
+
+          const serviceWorkerPlugin = new ServiceWorkerPlugin({
+            filename,
+            transformOptions,
+          })
+
+          const compilation = {
+            options: fakeOptions,
+            assets: {
+              [filename]: {
+                source: () => '',
+              },
+              'bar-v2.js': {},
             },
             getStats: () => ({
               toJson: () => ({}),
