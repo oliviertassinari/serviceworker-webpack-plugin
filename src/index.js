@@ -62,21 +62,13 @@ export default class ServiceWorkerPlugin {
     }
 
     const runtimePath = path.resolve(__dirname, './runtime.js')
-
-    compiler.hooks.normalModuleFactory.tap('sw-plugin-nmf', nmf => {
-      nmf.hooks.afterResolve.tapAsync('sw-plugin-after-resolve', (result, callback) => {
-        // Hijack the original module
-        if (result.resource === runtimePath) {
-          const data = {
-            scriptURL: path.join(this.options.publicPath, this.options.filename),
-          }
-
-          result.loaders.push(`${path.join(__dirname, 'runtimeLoader.js')}?${JSON.stringify(data)}`)
-        }
-
-        callback(null, result)
-      })
+    const data = JSON.stringify({
+      scriptURL: path.join(this.options.publicPath, this.options.filename),
     })
+    const loaderPath = `${path.join(__dirname, 'runtimeLoader.js')}?${data}`
+    const module = compiler.options.module
+    const rules = module.rules || module.loaders || (module.rules = [])
+    rules.push({ test: runtimePath, use: loaderPath })
 
     compiler.hooks.make.tapAsync('sw-plugin-make', (compilation, callback) => {
       if (this.warnings.length) {
