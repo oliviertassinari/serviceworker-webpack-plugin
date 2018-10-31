@@ -187,7 +187,7 @@ export default class ServiceWorkerPlugin {
       const serviceWorkerOptionInline = JSON.stringify(
         serviceWorkerOption,
         null,
-        this.options.minimize ? 0 : 2
+        (compiler.options.mode === 'production' || this.options.minimize) ? 0 : 2
       )
 
       const source = `
