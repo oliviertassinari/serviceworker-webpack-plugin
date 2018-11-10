@@ -67,7 +67,14 @@ export default class ServiceWorkerPlugin {
     })
     const loaderPath = `${path.join(__dirname, 'runtimeLoader.js')}?${data}`
     const module = compiler.options.module
-    const rules = module.rules || module.loaders || (module.rules = [])
+    let rules
+    if (module.rules) {
+      module.rules = rules = [...module.rules]
+    } else if (module.loaders) {
+      module.loaders = rules = [...module.loaders]
+    } else {
+      module.rules = rules = []
+    }
     rules.push({ test: runtimePath, use: loaderPath })
 
     compiler.hooks.make.tapAsync('sw-plugin-make', (compilation, callback) => {
