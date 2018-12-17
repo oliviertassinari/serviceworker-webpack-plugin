@@ -145,9 +145,13 @@ self.addEventListener('fetch', event => {
         return responseNetwork
       })
       .catch(() => {
-        // User is landing on our page.
         if (event.request.mode === 'navigate') {
-          return global.caches.match('./')
+          // If user navigation failed, let's provide an offline fallback
+          // to inform them properly.
+          //
+          // offline-fallback.html should be defined in servierWorkerOption.assets
+          // to ensure it's always cached.
+          return global.caches.match('./offline-fallback.html')
         }
 
         return null
