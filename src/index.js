@@ -2,6 +2,7 @@
 
 import path from 'path'
 import SingleEntryPlugin from 'webpack/lib/SingleEntryPlugin'
+import createHash from 'webpack/lib/util/createHash'
 import minimatch from 'minimatch'
 
 function validatePaths(assets, options) {
@@ -22,6 +23,18 @@ function validatePaths(assets, options) {
 
     return basePath + key
   })
+}
+
+function hash(source, outputOptions) {
+  const hashFunction = outputOptions.hashFunction
+  const hashDigest = outputOptions.hashDigest
+  const hashDigestLength = outputOptions.hashDigestLength
+  const hash = createHash(hashFunction)
+  if (outputOptions.hashSalt) {
+    hash.update(outputOptions.hashSalt)
+  }
+  hash.update(source)
+  return hash.digest(hashDigest).substr(0, hashDigestLength)
 }
 
 const COMPILER_NAME = 'serviceworker-plugin'
@@ -175,8 +188,11 @@ export default class ServiceWorkerPlugin {
 
     assets = validatePaths(assets, this.options)
 
+    const assetsHash = hash(JSON.stringify(assets), compilation.options.output)
+
     const serviceWorkerOption = this.options.transformOptions({
       assets,
+      assetsHash,
       jsonStats,
     })
 
