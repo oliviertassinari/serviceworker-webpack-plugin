@@ -29,6 +29,9 @@ const COMPILER_NAME = 'serviceworker-plugin'
 export default class ServiceWorkerPlugin {
   options = []
   warnings = []
+  assets = []
+  assetMap = {}
+  dependencyMap = {}
 
   constructor(options) {
     this.options = Object.assign(
@@ -174,6 +177,52 @@ export default class ServiceWorkerPlugin {
     }
 
     assets = validatePaths(assets, this.options)
+
+    let shouldUpdate = true
+
+    if (compiler.watchMode === true) {
+      const oldAssetsLength = this.assets.length
+
+      for (let asset of assets) {
+        if (!this.assetMap[asset]) {
+          this.assetMap[asset] = true
+          this.assets.push(asset)
+        }
+      }
+
+      assets = this.assets
+
+      shouldUpdate = oldAssetsLength !== assets.length
+
+      const childCompilations = compilation.children.filter(child => child.name === COMPILER_NAME)
+      const childCompilation = childCompilations.length ? childCompilations[0] : { fileDependencies: [] }
+      const childDependencies = [...childCompilation.fileDependencies]
+
+      const dependencyMap = {}
+      for (let dependency of childDependencies) {
+        dependencyMap[dependency] = compiler.inputFileSystem.readFileSync(dependency, { encoding: 'utf-8' })
+      }
+
+      if (!shouldUpdate) {
+        if (Object.keys(dependencyMap).length === Object.keys(this.dependencyMap).length) {
+          for (let dependency of childDependencies) {
+            if (shouldUpdate || dependencyMap[dependency] !== this.dependencyMap[dependency]) {
+              shouldUpdate = true
+            }
+          }
+        }
+        else {
+          shouldUpdate = true
+        }
+      }
+
+      this.dependencyMap = dependencyMap
+    }
+
+    if (!shouldUpdate) {
+      callback()
+      return
+    }
 
     const serviceWorkerOption = this.options.transformOptions({
       assets,
