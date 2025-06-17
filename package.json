@@ -31,7 +31,7 @@
     "webpack",
     "plugin"
   ],
-  "author": "Olivier Tassinari <olivier.tassinari@gmail.com> (https://github.com/oliviertassinari)",
+  "author": "https://github.com/oliviertassinari",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/oliviertassinari/serviceworker-webpack-plugin/issues"
